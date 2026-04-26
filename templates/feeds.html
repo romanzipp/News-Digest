@@ -1,0 +1,66 @@
+{{define "content"}}
+{{template "masthead" .}}
+<div class="max-w-3xl mx-auto px-12 py-8">
+    <div class="flex justify-between items-baseline mb-6">
+        <h2 class="text-2xl font-bold" style="font-family: var(--font-masthead)">Your Feeds</h2>
+        <div class="flex gap-3">
+            <a href="/freshrss" class="btn">FreshRSS Settings</a>
+            <form method="POST" action="/feeds/fetch">
+                <button type="submit" class="btn">Fetch Now</button>
+            </form>
+        </div>
+    </div>
+
+    {{if .Feeds}}
+    <div class="card mb-6">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-xs uppercase tracking-wider text-muted border-b border-rule">
+                    <th class="pb-2">Name</th>
+                    <th class="pb-2">Type</th>
+                    <th class="pb-2">Last Fetched</th>
+                    <th class="pb-2 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Feeds}}
+                <tr class="border-b border-dotted border-rule-light">
+                    <td class="py-2">
+                        <span class="{{if not .Enabled}}line-through text-muted{{end}}">{{.Name}}</span>
+                        <span class="text-xs text-muted ml-1">{{.URL}}</span>
+                    </td>
+                    <td class="py-2 text-xs uppercase tracking-wider text-muted">{{.Type}}</td>
+                    <td class="py-2 text-xs text-muted">{{if .LastFetchedAt}}{{.LastFetchedAt}}{{else}}never{{end}}</td>
+                    <td class="py-2 text-right">
+                        <form method="POST" action="/feeds/{{.ID}}/toggle" class="inline">
+                            <button type="submit" class="vote-btn">{{if .Enabled}}Disable{{else}}Enable{{end}}</button>
+                        </form>
+                        <form method="POST" action="/feeds/{{.ID}}/delete" class="inline ml-1">
+                            <button type="submit" class="vote-btn">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+    <div class="card mb-6 text-center text-muted italic py-8">
+        No feeds configured yet. Add your first RSS feed below.
+    </div>
+    {{end}}
+
+    <div class="card">
+        <h3 class="text-sm uppercase tracking-wider font-semibold mb-4">Add RSS Feed</h3>
+        <form method="POST" action="/feeds" class="flex gap-3">
+            <input type="text" name="name" placeholder="Feed name" class="form-input flex-1">
+            <input type="url" name="url" placeholder="https://example.com/feed.xml" required class="form-input flex-[2]">
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="/" class="text-xs text-muted underline">&larr; Back to digest</a>
+    </div>
+</div>
+{{end}}
