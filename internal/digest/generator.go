@@ -17,11 +17,11 @@ import (
 type Generator struct {
 	db       *sql.DB
 	cfg      *config.Config
-	ai       *ai.Client
+	ai       ai.Provider
 	registry *source.Registry
 }
 
-func NewGenerator(db *sql.DB, cfg *config.Config, aiClient *ai.Client, registry *source.Registry) *Generator {
+func NewGenerator(db *sql.DB, cfg *config.Config, aiClient ai.Provider, registry *source.Registry) *Generator {
 	return &Generator{db: db, cfg: cfg, ai: aiClient, registry: registry}
 }
 

@@ -12,6 +12,7 @@ type Config struct {
 	DBDsn               string
 	SessionSecret       string
 	RegistrationEnabled bool
+	AIProvider          string
 	AIEndpoint          string
 	AIAPIKey            string
 	AIModel             string
@@ -30,6 +31,7 @@ func Load() *Config {
 		DBDsn:               envOr("DB_DSN", "file:data/news.db?_journal=WAL&_fk=1"),
 		SessionSecret:       envOr("SESSION_SECRET", "change-me"),
 		RegistrationEnabled: envBool("REGISTRATION_ENABLED", true),
+		AIProvider:          envOr("AI_PROVIDER", "openai"),
 		AIEndpoint:          envOr("AI_ENDPOINT", "https://api.openai.com/v1"),
 		AIAPIKey:            os.Getenv("AI_API_KEY"),
 		AIModel:             envOr("AI_MODEL", "gpt-4o"),

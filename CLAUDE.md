@@ -9,7 +9,7 @@ Self-hosted, multi-user personal news digest web app in Go.
 - **Backend**: Go 1.23, net/http (Go 1.22+ ServeMux)
 - **Frontend**: Tailwind CSS v4, htmx (via npm), Go html/template
 - **Database**: SQLite (default) or PostgreSQL
-- **AI**: OpenAI-compatible API via github.com/sashabaranov/go-openai
+- **AI**: OpenAI-compatible (go-openai) or Anthropic (anthropic-sdk-go), switchable via AI_PROVIDER env var
 - **Auth**: alexedwards/scs (sessions) + bcrypt (passwords)
 
 ## Project Structure
@@ -38,7 +38,8 @@ static/js/                    — htmx (copied from node_modules at build)
 |---------|---------|
 | alexedwards/scs/v2 | Session management |
 | golang.org/x/crypto/bcrypt | Password hashing |
-| sashabaranov/go-openai | AI API client |
+| sashabaranov/go-openai | OpenAI API client |
+| anthropics/anthropic-sdk-go | Anthropic API client |
 | mmcdole/gofeed | RSS/Atom parsing |
 | mattn/go-sqlite3 | SQLite driver |
 | lib/pq | PostgreSQL driver |
