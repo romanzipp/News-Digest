@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/roman-zipp/news/internal/config"
+	"git.romanzipp.net/romanzipp/news/internal/config"
 )
 
 func Open(cfg *config.Config) (*sql.DB, error) {

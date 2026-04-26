@@ -8,10 +8,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/roman-zipp/news/internal/ai"
-	"github.com/roman-zipp/news/internal/config"
-	"github.com/roman-zipp/news/internal/models"
-	"github.com/roman-zipp/news/internal/source"
+	"git.romanzipp.net/romanzipp/news/internal/ai"
+	"git.romanzipp.net/romanzipp/news/internal/config"
+	"git.romanzipp.net/romanzipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/source"
 )
 
 type Generator struct {

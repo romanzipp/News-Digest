@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/roman-zipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/models"
 )
 
 func buildSystemPrompt(interests []models.Interest, votes []voteRecord, sections []models.CustomSection, categories []string) string {

@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/roman-zipp/news/internal/auth"
-	"github.com/roman-zipp/news/internal/templates"
+	"git.romanzipp.net/romanzipp/news/internal/auth"
+	"git.romanzipp.net/romanzipp/news/internal/templates"
 )
 
 type InterestsHandler struct {

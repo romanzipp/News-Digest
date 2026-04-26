@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/roman-zipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/models"
 )
 
 type contextKey string

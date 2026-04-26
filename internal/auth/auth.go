@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/roman-zipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

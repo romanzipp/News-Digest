@@ -1,0 +1,82 @@
+{{define "content"}}
+{{template "masthead" .}}
+
+{{if not .Empty}}
+    {{template "digest_strip" .}}
+    {{template "nav" .}}
+
+    {{if gt (len .AllDigests) 1}}
+    <div class="flex gap-4 text-xs uppercase tracking-wider px-12 pt-3">
+        {{range .AllDigests}}
+        <a href="/digest/{{$.Date}}/{{.ID}}" class="{{if eq .ID $.ActiveDigestID}}font-bold text-ink{{else}}text-muted hover:text-ink{{end}}">
+            {{if .IsAuto}}Auto{{else}}Manual{{end}} · {{.GeneratedAt}}
+        </a>
+        {{end}}
+    </div>
+    {{end}}
+
+    {{if .TopItems}}
+        {{with index .TopItems 0}}
+        <div class="px-12 pt-8 pb-6 single-rule">
+            {{template "lead_story" .}}
+        </div>
+        {{end}}
+
+        {{if gt (len .TopItems) 1}}
+        <div class="px-12 py-7 grid grid-cols-[1fr_1px_1fr] gap-7 single-rule">
+            {{if gt (len $.TopItems) 1}}
+                {{with index $.TopItems 1}}{{template "secondary_story" .}}{{end}}
+            {{end}}
+            <div class="bg-rule"></div>
+            {{if gt (len $.TopItems) 2}}
+                {{with index $.TopItems 2}}{{template "secondary_story" .}}{{end}}
+            {{end}}
+        </div>
+        {{end}}
+    {{end}}
+
+    {{if .RestItems}}
+    <div class="px-12 py-6 grid grid-cols-3 gap-8">
+        {{range .RestItems}}
+            {{template "brief_story" .}}
+        {{end}}
+    </div>
+    {{end}}
+
+    {{if .Trending}}
+        {{template "trending" .}}
+    {{end}}
+
+    {{template "colophon" .}}
+
+{{else}}
+    <div class="px-12 py-16 text-center">
+        <p class="text-muted italic mb-6">No digest for this date yet.</p>
+        <form method="POST" action="/digest/generate">
+            <button type="submit" class="btn btn-primary">Generate Digest Now</button>
+        </form>
+        <div class="mt-4 flex justify-center gap-4">
+            <a href="/feeds" class="text-xs text-muted underline">Manage feeds</a>
+            <a href="/interests" class="text-xs text-muted underline">Edit interests</a>
+        </div>
+    </div>
+    {{template "nav" .}}
+{{end}}
+
+{{end}}
+
+{{define "digest_strip"}}
+<div class="meta-strip single-rule">
+    <span>Today's brief · prepared {{if .Digest}}{{.Digest.GeneratedAt.Format "15:04"}} local{{end}}</span>
+    <span>
+        {{if .Digest}}
+        {{.Digest.ArticlesReviewed}} reviewed · {{.Digest.ArticlesSurfaced}} surfaced
+        {{end}}
+    </span>
+    <span>
+        <form method="POST" action="/digest/generate" class="inline">
+            <button type="submit" class="text-muted hover:text-ink underline cursor-pointer" style="font-family: inherit; font-size: inherit; background: none; border: none;">Re-generate</button>
+        </form>
+    </span>
+</div>
+{{end}}

@@ -1,0 +1,42 @@
+{{define "content"}}
+{{template "masthead" .}}
+<div class="max-w-3xl mx-auto px-12 py-8">
+    <h2 class="text-2xl font-bold mb-2" style="font-family: var(--font-masthead)">Custom Sections</h2>
+    <p class="text-sm text-muted italic mb-6">Define custom sections for your digest using natural language. The AI will select relevant articles for each section.</p>
+
+    {{if .Sections}}
+    <div class="mb-6 space-y-3">
+        {{range .Sections}}
+        <div class="card flex justify-between items-start gap-4">
+            <div>
+                <h3 class="font-bold">{{.Title}}</h3>
+                <p class="text-sm text-muted italic mt-1">{{.Prompt}}</p>
+            </div>
+            <form method="POST" action="/sections/{{.ID}}/delete">
+                <button type="submit" class="vote-btn">Remove</button>
+            </form>
+        </div>
+        {{end}}
+    </div>
+    {{end}}
+
+    <div class="card">
+        <h3 class="text-sm uppercase tracking-wider font-semibold mb-4">Add Section</h3>
+        <form method="POST" action="/sections">
+            <div class="mb-4">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-1">Title</label>
+                <input type="text" name="title" required class="form-input" placeholder="e.g. Cybersecurity Breaches">
+            </div>
+            <div class="mb-4">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-1">Prompt</label>
+                <textarea name="prompt" rows="3" required class="form-input" placeholder="e.g. Show me all important cybersecurity breaches and data leaks from the last 24 hours"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Section</button>
+        </form>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="/" class="text-xs text-muted underline">&larr; Back to digest</a>
+    </div>
+</div>
+{{end}}

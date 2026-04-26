@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	openai "github.com/sashabaranov/go-openai"
-	"github.com/roman-zipp/news/internal/config"
+	"git.romanzipp.net/romanzipp/news/internal/config"
 )
 
 type Client struct {

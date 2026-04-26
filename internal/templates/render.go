@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/roman-zipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/models"
 )
 
 type Templates struct {

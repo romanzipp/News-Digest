@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/roman-zipp/news/internal/auth"
-	"github.com/roman-zipp/news/internal/models"
-	"github.com/roman-zipp/news/internal/templates"
+	"git.romanzipp.net/romanzipp/news/internal/auth"
+	"git.romanzipp.net/romanzipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/templates"
 )
 
 type HomeHandler struct {

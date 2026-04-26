@@ -1,5 +1,7 @@
 # News Digest
 
+Go module: `git.romanzipp.net/romanzipp/news`
+
 Self-hosted, multi-user personal news digest web app in Go.
 
 ## Tech Stack

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/mmcdole/gofeed"
-	"github.com/roman-zipp/news/internal/models"
+	"git.romanzipp.net/romanzipp/news/internal/models"
 )
 
 type RSSProvider struct{}
