@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #f7f3ec;
+  --color-cream-dark: #f0e8da;
+  --color-ink: #1a1612;
+  --color-ink-soft: #2a2520;
+  --color-muted: #6b5f52;
+  --color-rule: #d8ccb8;
+  --color-rule-light: #c0b4a0;
+
+  --color-cat-economy: #7a3d2e;
+  --color-cat-tech: #2e4f7a;
+  --color-cat-space: #3d2e7a;
+  --color-cat-health: #2e7a55;
+  --color-cat-world: #7a6b2e;
+  --color-cat-sports: #7a2e5c;
+  --color-cat-science: #2e6a7a;
+  --color-cat-entertainment: #7a5c2e;
+  --color-cat-environment: #3a7a2e;
+
+  --font-masthead: "Playfair Display", "Times New Roman", Georgia, serif;
+  --font-body: Georgia, "Source Serif 4", "Times New Roman", serif;
+}
+
+@layer components {
+  .masthead-title {
+    font-family: var(--font-masthead);
+    @apply text-7xl font-black text-center tracking-tighter leading-none;
+  }
+
+  .double-rule {
+    @apply border-b-[3px] border-double border-ink;
+  }
+
+  .single-rule {
+    @apply border-b border-rule;
+  }
+
+  .dotted-rule {
+    @apply border-b border-dotted border-rule-light;
+  }
+
+  .meta-strip {
+    @apply flex justify-between py-2.5 px-12 text-xs text-muted uppercase tracking-wider;
+  }
+
+  .slug {
+    @apply text-[10px] uppercase tracking-[2px] font-bold flex items-center gap-2.5;
+    font-family: Georgia, serif;
+  }
+
+  .slug-dot {
+    @apply w-[3px] h-[3px] rounded-full inline-block;
+  }
+
+  .lead-headline {
+    font-family: var(--font-masthead);
+    @apply text-[42px] font-black leading-[1.05] my-2;
+    letter-spacing: -0.8px;
+  }
+
+  .secondary-headline {
+    font-family: var(--font-masthead);
+    @apply text-[26px] font-bold leading-[1.15] my-1.5;
+    letter-spacing: -0.3px;
+  }
+
+  .brief-headline {
+    font-family: var(--font-masthead);
+    @apply text-lg font-bold leading-[1.2] my-1;
+  }
+
+  .tldr {
+    @apply text-base leading-relaxed italic border-l-[3px] border-ink pl-3.5;
+    color: var(--color-ink-soft);
+  }
+
+  .byline {
+    @apply flex justify-between items-center text-xs text-muted italic;
+  }
+
+  .vote-btn {
+    @apply border border-rule-light rounded-sm px-1.5 py-0.5 text-[11px] cursor-pointer bg-transparent text-muted;
+    font-family: inherit;
+  }
+
+  .vote-btn:hover {
+    @apply bg-ink text-cream;
+  }
+
+  .vote-btn-active {
+    @apply bg-ink text-cream;
+  }
+
+  .story-bullets {
+    @apply pl-5 text-sm leading-relaxed;
+    color: var(--color-ink-soft);
+  }
+
+  .story-bullets li {
+    @apply mb-1;
+  }
+
+  .form-input {
+    @apply w-full border border-rule px-3 py-2 bg-cream text-ink;
+    font-family: var(--font-body);
+  }
+
+  .form-input:focus {
+    @apply outline-none border-ink;
+  }
+
+  .btn {
+    @apply border border-rule-light rounded-sm px-4 py-2 text-xs uppercase tracking-wider cursor-pointer bg-transparent text-muted;
+    font-family: var(--font-body);
+  }
+
+  .btn:hover {
+    @apply bg-ink text-cream;
+  }
+
+  .btn-primary {
+    @apply bg-ink text-cream border-ink;
+  }
+
+  .btn-primary:hover {
+    @apply bg-ink-soft;
+  }
+
+  .card {
+    @apply border border-rule p-6 bg-cream;
+  }
+
+  .image-placeholder {
+    @apply w-full flex items-center justify-center text-muted text-xs uppercase tracking-wider rounded-sm;
+    font-family: ui-monospace, Menlo, monospace;
+    background: repeating-linear-gradient(135deg, rgba(90,74,58,0.09) 0 2px, transparent 2px 10px),
+                linear-gradient(180deg, rgba(90,74,58,0.12), rgba(90,74,58,0.03));
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-cream: #1a1612;
+    --color-cream-dark: #15120f;
+    --color-ink: #f7f3ec;
+    --color-ink-soft: #e0d8cc;
+    --color-muted: #9a8e80;
+    --color-rule: #3a3530;
+    --color-rule-light: #4a4540;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
