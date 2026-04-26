@@ -43,7 +43,7 @@ func (h *HomeHandler) DigestByDate(w http.ResponseWriter, r *http.Request) {
 
 	digest, items, err := h.loadDigest(user.ID, date, 0)
 	if err != nil {
-		h.renderEmpty(w, user, date)
+		h.renderEmpty(w, r, user, date)
 		return
 	}
 
@@ -61,7 +61,7 @@ func (h *HomeHandler) DigestByID(w http.ResponseWriter, r *http.Request) {
 
 	digest, items, err := h.loadDigest(user.ID, date, id)
 	if err != nil {
-		h.renderEmpty(w, user, date)
+		h.renderEmpty(w, r, user, date)
 		return
 	}
 
@@ -146,7 +146,9 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	h.tmpl.Render(w, "home", data)
 }
 
-func (h *HomeHandler) renderEmpty(w http.ResponseWriter, user *models.User, date string) {
+func (h *HomeHandler) renderEmpty(w http.ResponseWriter, r *http.Request, user *models.User, date string) {
+	flash, _ := h.sessions.Pop(r.Context(), "flash").(string)
+
 	prevDate := h.adjacentDate(user.ID, date, "prev")
 	nextDate := h.adjacentDate(user.ID, date, "next")
 	today := time.Now().Format("2006-01-02")
@@ -164,6 +166,7 @@ func (h *HomeHandler) renderEmpty(w http.ResponseWriter, user *models.User, date
 		"Empty":         true,
 		"DigestMeta":    nil,
 		"FeedNames":     h.feedNames(user.ID),
+		"Flash":         flash,
 	})
 }
 
