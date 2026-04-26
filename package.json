@@ -1,7 +1,9 @@
 {
   "private": true,
   "dependencies": {
-    "htmx.org": "^2.0.0"
+    "htmx.org": "^2.0.0",
+    "@fontsource/playfair-display": "^5.0.0",
+    "@fontsource/source-serif-4": "^5.0.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

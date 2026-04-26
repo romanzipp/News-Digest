@@ -99,6 +99,7 @@ make css-watch  # watch CSS changes
 - Keep features abstract/extensible (e.g. source providers)
 - No custom JS — only htmx for interactivity
 - Tailwind v4 via npm (not CDN), htmx via npm
+- No remote resources (Google Fonts, CDNs) — fonts via @fontsource, served locally
 
 ## Git
 
