@@ -1,0 +1,7 @@
+{{define "category_slug"}}
+<div class="slug" style="color: {{categoryHex .Category}}">
+    <span>{{.Category}}</span>
+    <span class="slug-dot" style="background: {{categoryHex .Category}}"></span>
+    <span class="text-muted">priority {{.Priority}}/10</span>
+</div>
+{{end}}

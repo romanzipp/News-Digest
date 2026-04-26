@@ -1,0 +1,6 @@
+{{define "byline"}}
+<div class="byline">
+    <span>{{.SourceName}} · {{.TimeAgo}} · {{.ReadTime}} min</span>
+    {{template "vote_buttons" .}}
+</div>
+{{end}}

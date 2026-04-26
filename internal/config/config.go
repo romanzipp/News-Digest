@@ -3,7 +3,6 @@ package config
 import (
 	"os"
 	"strconv"
-	"strings"
 )
 
 type Config struct {
@@ -20,8 +19,7 @@ type Config struct {
 	AIMaxContext         int
 	FetchCron           string
 	DigestCron          string
-	ImageProxyEnabled   bool
-	DefaultCategories   []string
+	ImageProxyEnabled bool
 }
 
 func Load() *Config {
@@ -39,8 +37,7 @@ func Load() *Config {
 		AIMaxContext:         envInt("AI_MAX_CONTEXT", 128000),
 		FetchCron:           envOr("FETCH_CRON", "0 5 * * *"),
 		DigestCron:          envOr("DIGEST_CRON", "0 6 * * *"),
-		ImageProxyEnabled:   envBool("IMAGE_PROXY_ENABLED", true),
-		DefaultCategories:   envList("DEFAULT_CATEGORIES", []string{"Technology", "Economy", "Health", "Science", "World", "Sports", "Entertainment", "Environment"}),
+		ImageProxyEnabled: envBool("IMAGE_PROXY_ENABLED", true),
 	}
 }
 
@@ -75,17 +72,3 @@ func envInt(key string, fallback int) int {
 	return n
 }
 
-func envList(key string, fallback []string) []string {
-	v := os.Getenv(key)
-	if v == "" {
-		return fallback
-	}
-	parts := strings.Split(v, ",")
-	result := make([]string, 0, len(parts))
-	for _, p := range parts {
-		if t := strings.TrimSpace(p); t != "" {
-			result = append(result, t)
-		}
-	}
-	return result
-}

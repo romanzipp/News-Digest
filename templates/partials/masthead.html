@@ -1,0 +1,13 @@
+{{define "masthead"}}
+<header class="px-12 pt-7 pb-4 double-rule">
+    <div class="flex justify-between items-baseline mb-3 text-[11px] uppercase tracking-wider text-muted">
+        <span>{{if .User}}{{.User.Username}}{{else}}Guest{{end}}</span>
+        <span>{{.DateFormatted}}</span>
+        <span>Est. 2024 · Self-hosted</span>
+    </div>
+    <div class="masthead-title">The Daily Digest</div>
+    <div class="text-center italic text-[13px] mt-2 text-muted">
+        "All the news worth summarising"{{if .DigestMeta}} · {{.DigestMeta.FeedsCount}} feeds · {{.DigestMeta.ArticlesReviewed}} stories reviewed · {{.DigestMeta.ArticlesSurfaced}} surfaced{{end}}
+    </div>
+</header>
+{{end}}

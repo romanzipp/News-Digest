@@ -1,0 +1,34 @@
+{{define "content"}}
+<div class="max-w-2xl mx-auto px-12 py-16">
+    <div class="text-center mb-10">
+        <h1 class="masthead-title text-4xl mb-3">Welcome, {{.User.Username}}</h1>
+        <p class="text-muted italic">Tell us what you care about so we can curate your digest.</p>
+    </div>
+
+    <div class="card">
+        <form method="POST" action="/wizard">
+            <div class="mb-6">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-2">Topics I care deeply about</label>
+                <textarea name="interests_deep" rows="3" class="form-input" placeholder="e.g. AI policy, macroeconomics, open source software, climate science">{{.InterestsDeep}}</textarea>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-2">Topics I want less of</label>
+                <textarea name="interests_less" rows="2" class="form-input" placeholder="e.g. celebrity gossip, sports unless championships">{{.InterestsLess}}</textarea>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-2">Languages I read</label>
+                <input type="text" name="languages" value="{{.Languages}}" class="form-input" placeholder="e.g. English, German, French">
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-2">Anything else the AI should know</label>
+                <textarea name="interests_other" rows="2" class="form-input" placeholder="e.g. I'm a platform engineer, go deep on infrastructure topics">{{.InterestsOther}}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full">Save & Continue</button>
+        </form>
+    </div>
+</div>
+{{end}}

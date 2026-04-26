@@ -1,0 +1,18 @@
+{{define "secondary_story"}}
+<article>
+    {{template "category_slug" .}}
+    <h2 class="secondary-headline">{{.Headline}}</h2>
+    {{if .ImageURL}}
+    <img src="{{proxyURL .ImageURL}}" alt="" class="w-full h-[120px] object-cover rounded-sm">
+    {{else}}
+    <div class="image-placeholder h-[120px]">{{lower .Category}}</div>
+    {{end}}
+    <div class="text-sm leading-relaxed mt-3 mb-3" style="color: var(--color-ink-soft)">{{.TLDR}}</div>
+    {{if .Bullets}}
+    <ul class="story-bullets text-[13px] mb-2.5">
+        {{range .Bullets}}<li>{{.}}</li>{{end}}
+    </ul>
+    {{end}}
+    {{template "byline" .}}
+</article>
+{{end}}

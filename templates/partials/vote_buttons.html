@@ -1,0 +1,12 @@
+{{define "vote_buttons"}}
+<span class="flex gap-1" hx-target="this" hx-swap="outerHTML">
+    <button
+        hx-post="/votes"
+        hx-vals='{"item_id": "{{.ItemID}}", "value": "1"}'
+        class="vote-btn {{if eq .UserVote 1}}vote-btn-active{{end}}">&#9650; more</button>
+    <button
+        hx-post="/votes"
+        hx-vals='{"item_id": "{{.ItemID}}", "value": "-1"}'
+        class="vote-btn {{if eq .UserVote -1}}vote-btn-active{{end}}">&#9660; less</button>
+</span>
+{{end}}

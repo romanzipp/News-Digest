@@ -1,0 +1,15 @@
+{{define "nav"}}
+<nav class="flex justify-between items-center px-12 meta-strip single-rule">
+    {{if .PrevDate}}
+        <a href="/digest/{{.PrevDate}}" class="hover:text-ink">&larr; {{formatDate .PrevDate}}</a>
+    {{else}}
+        <span></span>
+    {{end}}
+    <span class="font-semibold text-ink">{{formatDate .Date}}</span>
+    {{if .NextDate}}
+        <a href="/digest/{{.NextDate}}" class="hover:text-ink">{{formatDate .NextDate}} &rarr;</a>
+    {{else}}
+        <span class="opacity-50">Today</span>
+    {{end}}
+</nav>
+{{end}}

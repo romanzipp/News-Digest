@@ -90,6 +90,14 @@ make css        # build CSS once
 make css-watch  # watch CSS changes
 ```
 
+## Code Style
+
+- Reuse template components (partials) — never duplicate markup
+- Comments only where strictly necessary
+- Keep features abstract/extensible (e.g. source providers)
+- No custom JS — only htmx for interactivity
+- Tailwind v4 via npm (not CDN), htmx via npm
+
 ## Git
 
 - Auto-commit after logical steps
