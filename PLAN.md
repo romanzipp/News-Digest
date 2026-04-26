@@ -56,3 +56,9 @@ We are developing a personal news digest website, self-hosted.
 - do not add commit descriptions
 - use short descriptive commit messages
 - do not push
+
+## additions
+
+- authentication: through email/password, do not send mail verifications
+- use established ways of atuehtnications in go/go libraries, dont roll it on your own
+- make features abstract (eg. sources) so they can be enhacned later
