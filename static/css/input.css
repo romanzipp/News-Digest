@@ -200,8 +200,20 @@
     }
   }
 
+  .brief-masonry {
+    columns: 3;
+    column-gap: 2rem;
+  }
+
   .brief-cell {
-    @apply pb-4 border-b border-dotted border-rule-light;
+    @apply pb-4 mb-4 border-b border-dotted border-rule-light;
+    break-inside: avoid;
+  }
+
+  .brief-cell:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
   .article-desc {
@@ -234,8 +246,3 @@ body {
   color: var(--color-ink);
 }
 
-/* Remove bottom border from last row in 3-col brief grid */
-.brief-grid > .brief-cell:nth-last-child(-n+3) {
-  border-bottom: none;
-  padding-bottom: 0;
-}
