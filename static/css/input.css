@@ -220,7 +220,7 @@
   }
 
   .section-wire-item {
-    @apply flex items-baseline gap-2 py-2.5 border-t border-rule;
+    @apply flex items-baseline gap-3 py-2.5 border-t border-rule;
     text-decoration: none;
     color: inherit;
     transition: background-color 0.1s ease;
@@ -231,16 +231,16 @@
   }
 
   .section-wire-meta {
-    @apply flex items-center gap-2 shrink-0;
+    @apply flex items-center gap-3 shrink-0;
   }
 
   .section-wire-time {
-    @apply text-sm font-bold text-ink-soft;
+    @apply text-xs text-muted;
     font-family: ui-monospace, Menlo, monospace;
   }
 
   .section-severity {
-    @apply w-2 h-2 rounded-full shrink-0;
+    @apply w-2.5 h-2.5 rounded-full shrink-0;
   }
 
   .section-severity-high {
