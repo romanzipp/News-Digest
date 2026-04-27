@@ -233,7 +233,7 @@
   }
 
   .section-wire-table td {
-    @apply py-2.5 pr-4 align-middle;
+    @apply py-2.5 pr-4 align-top;
     white-space: nowrap;
   }
 
