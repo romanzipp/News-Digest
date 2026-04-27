@@ -59,11 +59,11 @@
 
     {{range .Sections}}
     <div class="double-rule">
-        <div class="content-container pt-5 pb-4">
+        <div class="max-w-[90rem] mx-auto px-12 pt-5 pb-4">
             <div class="section-header">
                 <span class="section-header-label">{{.Title}}</span>
             </div>
-            <div class="grid grid-cols-2 gap-x-12">
+            <div class="grid grid-cols-3 gap-x-12">
                 {{range .Items}}
                 <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-item">
                     <span class="section-wire-headline">{{.Headline}}</span>
