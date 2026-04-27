@@ -159,6 +159,7 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	data["TopItems"] = top
 	data["RestItems"] = rest
 	data["GroupedRest"] = groupByCategory(rest)
+	data["Sections"] = h.loadSections(dg.ID)
 
 	h.tmpl.Render(w, "home", data)
 }
@@ -371,6 +372,57 @@ func groupByCategory(items []itemView) []categoryGroup {
 		}
 	}
 	return groups
+}
+
+type digestSectionView struct {
+	Title string
+	Items []sectionItemView
+}
+
+type sectionItemView struct {
+	Headline   string
+	TLDR       string
+	Bullets    []string
+	SourceName string
+	SourceURL  string
+	Language   string
+}
+
+func (h *HomeHandler) loadSections(digestID int64) []digestSectionView {
+	rows, err := h.db.Query(
+		`SELECT cs.title, si.headline, si.tldr, si.bullets, si.source_name, si.source_url, si.language
+		 FROM section_items si
+		 JOIN custom_sections cs ON cs.id = si.section_id
+		 WHERE si.digest_id = ?
+		 ORDER BY cs.position, si.position`,
+		digestID,
+	)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+
+	sectionMap := map[string]*digestSectionView{}
+	var order []string
+	for rows.Next() {
+		var title string
+		var item sectionItemView
+		var bulletsJSON string
+		rows.Scan(&title, &item.Headline, &item.TLDR, &bulletsJSON, &item.SourceName, &item.SourceURL, &item.Language)
+		json.Unmarshal([]byte(bulletsJSON), &item.Bullets)
+
+		if _, ok := sectionMap[title]; !ok {
+			sectionMap[title] = &digestSectionView{Title: title}
+			order = append(order, title)
+		}
+		sectionMap[title].Items = append(sectionMap[title].Items, item)
+	}
+
+	var sections []digestSectionView
+	for _, t := range order {
+		sections = append(sections, *sectionMap[t])
+	}
+	return sections
 }
 
 func formatDateLong(s string) string {

@@ -57,6 +57,25 @@
     </div>
     {{end}}
 
+    {{range .Sections}}
+    <div class="single-rule">
+        <div class="content-container pt-6 pb-4">
+            <div class="text-sm uppercase tracking-[2px] font-bold mb-4 text-ink">{{.Title}}</div>
+            <div class="brief-masonry">
+                {{range .Items}}
+                <div class="brief-cell">
+                    <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="article-link block p-3">
+                        <h3 class="brief-headline">{{.Headline}}</h3>
+                        <div class="text-base leading-snug mb-3 article-desc">{{.TLDR}}</div>
+                        <div class="text-xs text-muted italic">{{.SourceName}}</div>
+                    </a>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    {{end}}
+
     {{template "colophon" .}}
 
 {{else}}
