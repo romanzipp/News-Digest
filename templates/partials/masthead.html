@@ -1,17 +1,17 @@
 {{define "masthead"}}
 <header class="double-rule">
     <div class="content-container pt-7 pb-4">
-        <div class="grid grid-cols-3 items-baseline mb-3 text-[11px] uppercase tracking-wider text-muted">
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center mb-3 text-[11px] uppercase tracking-wider text-muted">
             <span>{{if .User}}{{.User.Username}}{{else}}Guest{{end}}</span>
-            <span class="text-center">{{.DateFormatted}}</span>
-            <span class="flex gap-3 justify-end">
+            <span>{{.DateFormatted}}</span>
+            <span class="text-right">
                 <a href="/feeds" class="hover:text-ink">Feeds</a>
-                <span>·</span>
+                ·
                 <a href="/interests" class="hover:text-ink">Interests</a>
-                <span>·</span>
+                ·
                 <a href="/sections" class="hover:text-ink">Sections</a>
                 {{if .User}}
-                <span>·</span>
+                ·
                 <form method="POST" action="/logout" class="inline">
                     <button type="submit" class="hover:text-ink cursor-pointer" style="font-family:inherit;font-size:inherit;background:none;border:none;padding:0;text-transform:uppercase;letter-spacing:inherit;color:inherit">Logout</button>
                 </form>
@@ -19,9 +19,9 @@
             </span>
         </div>
         <a href="/" class="masthead-title block no-underline" style="text-decoration:none;color:inherit">The Daily Digest</a>
-        <div class="grid grid-cols-3 items-baseline mt-2 text-[13px] text-muted italic">
+        <div class="grid grid-cols-[1fr_auto_1fr] items-center mt-2 text-[13px] text-muted italic">
             <span>{{if .DigestMeta}}{{.DigestMeta.FeedsCount}} feeds{{end}}</span>
-            <span class="text-center">"All the news worth summarising"</span>
+            <span>"All the news worth summarising"</span>
             <span class="text-right">{{if .DigestMeta}}{{.DigestMeta.ArticlesReviewed}} reviewed · {{.DigestMeta.ArticlesSurfaced}} surfaced{{end}}</span>
         </div>
     </div>
