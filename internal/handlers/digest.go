@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -115,11 +116,15 @@ func (h *DigestHandler) GeneratingStatus(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	h.tmpl.RenderPartial(w, "generating_status", map[string]any{
+	if err := h.tmpl.RenderPartial(w, "generating_status", map[string]any{
 		"Job":     job,
 		"JobID":   id,
 		"Percent": jobPercent(job),
-	})
+	}); err != nil {
+		log.Printf("render generating_status: %v", err)
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprintf(w, `<div class="text-muted italic">%s — %s</div>`, job.Status, job.Step)
+	}
 }
 
 func jobPercent(job *digest.JobStatus) int {

@@ -83,9 +83,10 @@ func (t *Templates) Render(w http.ResponseWriter, name string, data any) error {
 }
 
 func (t *Templates) RenderPartial(w http.ResponseWriter, name string, data any) error {
-	tmpl, err := t.parse(name)
+	partials, _ := filepath.Glob(filepath.Join(t.dir, "partials", "*.html"))
+	tmpl, err := template.New("").Funcs(t.funcs).ParseFiles(partials...)
 	if err != nil {
-		return fmt.Errorf("parse template %s: %w", name, err)
+		return fmt.Errorf("parse partial %s: %w", name, err)
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	return tmpl.ExecuteTemplate(w, name, data)
