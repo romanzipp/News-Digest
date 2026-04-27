@@ -22,6 +22,7 @@ func buildSystemPrompt(interests []models.Interest, votes []voteRecord, sections
 8. Estimate read time in minutes
 9. Preserve the original language of the article for the summary
 10. Order articles by relevance to the user's interests
+11. DEDUPLICATE: If multiple articles cover the same story/event, pick the SINGLE best one and discard the rest. Never include multiple articles about the same topic in the main items. Merge key details from duplicates into the selected article's summary and bullets.
 
 `)
 
