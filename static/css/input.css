@@ -245,6 +245,7 @@
   .section-wire-time {
     @apply text-xs text-muted;
     font-family: ui-monospace, Menlo, monospace;
+    line-height: 1.375rem;
   }
 
   .section-wire-sev-cell {
@@ -270,6 +271,7 @@
   .section-wire-indicator {
     @apply text-xs font-bold text-ink-soft;
     font-family: ui-monospace, Menlo, monospace;
+    line-height: 1.375rem;
   }
 
   .section-wire-headline {
