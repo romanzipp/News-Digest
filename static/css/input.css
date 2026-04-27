@@ -112,7 +112,7 @@
 
   .brief-headline {
     font-family: var(--font-masthead);
-    @apply text-xl font-bold leading-[1.2] mt-1 mb-2;
+    @apply text-xl font-bold leading-[1.2] mt-1 mb-4;
   }
 
   .tldr {
