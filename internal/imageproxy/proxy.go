@@ -1,6 +1,8 @@
 package imageproxy
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -29,8 +31,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", ct)
-	w.Header().Set("Cache-Control", "public, max-age=86400")
+	etag := fmt.Sprintf(`"%x"`, sha256.Sum256([]byte(rawURL)))
 
-	io.Copy(w, io.LimitReader(resp.Body, 10<<20)) // 10MB limit
+	if r.Header.Get("If-None-Match") == etag {
+		w.WriteHeader(http.StatusNotModified)
+		return
+	}
+
+	w.Header().Set("Content-Type", ct)
+	w.Header().Set("Cache-Control", "public, max-age=604800, immutable")
+	w.Header().Set("ETag", etag)
+
+	io.Copy(w, io.LimitReader(resp.Body, 10<<20))
 }
