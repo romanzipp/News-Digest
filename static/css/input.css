@@ -65,12 +65,12 @@
 
 @layer components {
   .content-container {
-    @apply max-w-7xl mx-auto px-12;
+    @apply max-w-7xl mx-auto px-4 sm:px-8 lg:px-12;
   }
 
   .masthead-title {
     font-family: var(--font-masthead);
-    @apply text-7xl font-black text-center tracking-tighter leading-none;
+    @apply text-4xl sm:text-5xl lg:text-7xl font-black text-center tracking-tighter leading-none;
   }
 
   .double-rule {
@@ -100,13 +100,13 @@
 
   .lead-headline {
     font-family: var(--font-masthead);
-    @apply text-[42px] font-black leading-[1.05] mt-2 mb-4;
+    @apply text-2xl sm:text-[32px] lg:text-[42px] font-black leading-[1.05] mt-2 mb-4;
     letter-spacing: -0.8px;
   }
 
   .secondary-headline {
     font-family: var(--font-masthead);
-    @apply text-[26px] font-bold leading-[1.15] mt-1.5 mb-3;
+    @apply text-xl sm:text-[26px] font-bold leading-[1.15] mt-1.5 mb-3;
     letter-spacing: -0.3px;
   }
 
@@ -202,8 +202,20 @@
   }
 
   .brief-masonry {
-    columns: 3;
+    columns: 1;
     column-gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .brief-masonry {
+      columns: 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .brief-masonry {
+      columns: 3;
+    }
   }
 
   .brief-cell {
@@ -216,7 +228,7 @@
   }
 
   .section-header-label {
-    @apply inline-block px-4 text-3xl font-black tracking-tight;
+    @apply inline-block px-4 text-xl sm:text-2xl lg:text-3xl font-black tracking-tight;
     font-family: var(--font-masthead);
   }
 

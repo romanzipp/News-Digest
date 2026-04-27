@@ -31,11 +31,11 @@
 
         {{if gt (len .TopItems) 1}}
         <div class="single-rule">
-            <div class="content-container py-7 grid grid-cols-[1fr_1px_1fr] gap-7">
+            <div class="content-container py-7 grid grid-cols-1 sm:grid-cols-[1fr_1px_1fr] gap-7">
                 {{if gt (len $.TopItems) 1}}
                     {{with index $.TopItems 1}}{{template "article" .}}{{end}}
                 {{end}}
-                <div class="bg-rule"></div>
+                <div class="bg-rule hidden sm:block"></div>
                 {{if gt (len $.TopItems) 2}}
                     {{with index $.TopItems 2}}{{template "article" .}}{{end}}
                 {{end}}
@@ -46,16 +46,16 @@
 
     {{range .Sections}}
     <div>
-        <div class="max-w-3xl mx-auto px-12 pt-5 pb-4">
+        <div class="max-w-3xl mx-auto px-4 sm:px-8 lg:px-12 pt-5 pb-4">
             <div class="section-header">
                 <span class="section-header-label">{{.Title}}</span>
             </div>
             <table class="section-wire-table">
                 {{range .Items}}
                 <tr class="{{if .IsRead}}is-read{{end}}">
-                    <td class="section-wire-time">{{.TimeFormatted}}</td>
+                    <td class="section-wire-time hidden sm:table-cell">{{.TimeFormatted}}</td>
                     <td class="section-wire-sev-cell"><span class="section-severity section-severity-{{.Severity}}"></span></td>
-                    <td class="section-wire-indicator">{{.Indicator}}</td>
+                    <td class="section-wire-indicator hidden md:table-cell">{{.Indicator}}</td>
                     <td><a href="/read/{{.ID}}?type=section" target="_blank" rel="noopener" class="section-wire-headline">{{.Headline}}</a></td>
                 </tr>
                 {{end}}
@@ -98,7 +98,7 @@
 
 {{define "digest_strip"}}
 <div class="single-rule">
-    <div class="content-container grid grid-cols-[1fr_auto_1fr] items-center py-2.5 text-xs text-muted uppercase tracking-wider">
+    <div class="content-container flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-0 py-2.5 text-xs text-muted uppercase tracking-wider">
         <span>Today's brief · prepared {{if .Digest}}{{.Digest.GeneratedAt.Format "15:04"}} local{{end}}</span>
         <span>{{if .Digest}}{{.DigestMeta.FeedsCount}} feeds · {{.Digest.ArticlesReviewed}} reviewed · {{.Digest.ArticlesSurfaced}} surfaced{{end}}</span>
         <span class="text-right">
