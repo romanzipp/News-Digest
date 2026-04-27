@@ -65,7 +65,7 @@
 
 @layer components {
   .content-container {
-    @apply max-w-6xl mx-auto px-12;
+    @apply max-w-7xl mx-auto px-12;
   }
 
   .masthead-title {
