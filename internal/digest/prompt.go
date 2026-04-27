@@ -63,7 +63,8 @@ Each section: section_id, items[] with article_guid, headline, severity (high/me
 
 ## Instructions
 Select at most 20 articles for the main items. Order by priority descending.
-Only include categories that naturally fit the available articles. Do NOT force articles into categories just to have coverage — quality over breadth. If a category has relevant articles, aim for at least 2.
+Only include categories that naturally fit the available articles. Do NOT force articles into categories just to have coverage — quality over breadth. If a category has relevant articles, aim for at least 3.
+Never fabricate or embellish information. If an article's content is short or sparse, keep the summary and bullets short too — only reflect what is actually in the source material.
 
 For section items:
 - "headline" is a single short summary line (no separate description)
