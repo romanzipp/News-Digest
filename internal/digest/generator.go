@@ -161,19 +161,8 @@ func (g *Generator) GenerateAsync(jobID, userID int64) {
 
 		resp, err := parseResponse(raw)
 		if err != nil {
-			log.Printf("parse error on batch %d, retrying: %v", i, err)
-			g.updateJob(jobID, "generating", fmt.Sprintf("Retrying batch %d/%d...", i+1, totalBatches), i, totalBatches)
-
-			raw, err = g.ai.Complete(ctx, systemPrompt+"\n\nIMPORTANT: Respond with valid JSON only.", articlePrompt)
-			if err != nil {
-				g.failJob(jobID, fmt.Errorf("AI retry batch %d: %w", i, err))
-				return
-			}
-			resp, err = parseResponse(raw)
-			if err != nil {
-				g.failJob(jobID, fmt.Errorf("parse retry batch %d: %w", i, err))
-				return
-			}
+			g.failJob(jobID, fmt.Errorf("parse batch %d: %w", i, err))
+			return
 		}
 
 		responses = append(responses, resp)
@@ -242,15 +231,7 @@ func (g *Generator) GenerateForUser(ctx context.Context, userID int64, isAuto bo
 
 		resp, err := parseResponse(raw)
 		if err != nil {
-			log.Printf("parse error on batch %d, retrying: %v", i, err)
-			raw, err = g.ai.Complete(ctx, systemPrompt+"\n\nIMPORTANT: Respond with valid JSON only.", articlePrompt)
-			if err != nil {
-				return nil, fmt.Errorf("AI retry batch %d: %w", i, err)
-			}
-			resp, err = parseResponse(raw)
-			if err != nil {
-				return nil, fmt.Errorf("parse retry batch %d: %w", i, err)
-			}
+			return nil, fmt.Errorf("parse batch %d: %w", i, err)
 		}
 
 		responses = append(responses, resp)
