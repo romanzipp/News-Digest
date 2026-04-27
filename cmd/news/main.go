@@ -56,6 +56,7 @@ func main() {
 	// AI + Digest
 	aiClient := ai.New(cfg)
 	gen := digest.NewGenerator(db, cfg, aiClient, registry)
+	gen.CleanupStaleJobs()
 
 	// Handlers
 	authH := handlers.NewAuthHandler(cfg, authSvc, sessions, tmpl)

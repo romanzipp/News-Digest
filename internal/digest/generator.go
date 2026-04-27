@@ -25,6 +25,15 @@ func NewGenerator(db *sql.DB, cfg *config.Config, aiClient ai.Provider, registry
 	return &Generator{db: db, cfg: cfg, ai: aiClient, registry: registry}
 }
 
+func (g *Generator) CleanupStaleJobs() {
+	res, _ := g.db.Exec(
+		"UPDATE digest_jobs SET status = 'failed', step = 'Interrupted — server was restarted' WHERE status IN ('pending', 'fetching', 'generating')",
+	)
+	if n, _ := res.RowsAffected(); n > 0 {
+		log.Printf("cleaned up %d stale digest jobs", n)
+	}
+}
+
 func (g *Generator) CreateJob(userID int64) (int64, error) {
 	result, err := g.db.Exec(
 		"INSERT INTO digest_jobs (user_id, status, step) VALUES (?, 'pending', 'Starting...')",
