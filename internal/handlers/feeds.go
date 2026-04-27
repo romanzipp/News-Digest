@@ -119,9 +119,23 @@ func (h *FeedsHandler) FreshRSSSave(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *FeedsHandler) FreshRSSTest(w http.ResponseWriter, r *http.Request) {
+	user := auth.UserFromContext(r.Context())
 	baseURL := r.FormValue("url")
 	username := r.FormValue("username")
 	apiPassword := r.FormValue("api_password")
+
+	// Save first so the form stays populated after redirect
+	cfg, _ := json.Marshal(source.FreshRSSConfig{
+		Username:    username,
+		APIPassword: apiPassword,
+	})
+	existing := h.loadFreshRSS(user.ID)
+	if existing != nil {
+		h.db.Exec("UPDATE sources SET url = ?, config = ?, name = 'FreshRSS' WHERE id = ?", baseURL, string(cfg), existing.ID)
+	} else {
+		h.db.Exec("INSERT INTO sources (user_id, type, name, url, config) VALUES (?, 'freshrss', 'FreshRSS', ?, ?)",
+			user.ID, baseURL, string(cfg))
+	}
 
 	err := source.TestFreshRSSConnection(baseURL, username, apiPassword)
 	if err != nil {
