@@ -101,6 +101,7 @@ Respond with valid JSON in this exact structure:
 }
 
 Select at most 20 articles for the main items. Order by priority descending.
+For each category you use, try to include at least 2 articles. You don't need to cover every category — only use categories that have relevant articles.
 
 For section items:
 - "headline" is a single short summary line (no separate description)
