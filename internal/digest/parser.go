@@ -3,6 +3,7 @@ package digest
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type DigestResponse struct {
@@ -55,11 +56,34 @@ type MetaResponse struct {
 }
 
 func parseResponse(raw string) (*DigestResponse, error) {
+	cleaned := extractJSON(raw)
 	var resp DigestResponse
-	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+	if err := json.Unmarshal([]byte(cleaned), &resp); err != nil {
 		return nil, fmt.Errorf("parse AI response: %w", err)
 	}
 	return &resp, nil
+}
+
+func extractJSON(s string) string {
+	// Strip markdown code fences if present
+	if strings.Contains(s, "```") {
+		start := strings.Index(s, "```")
+		// Skip the opening fence line
+		afterFence := s[start+3:]
+		if nl := strings.Index(afterFence, "\n"); nl >= 0 {
+			afterFence = afterFence[nl+1:]
+		}
+		if end := strings.Index(afterFence, "```"); end >= 0 {
+			return strings.TrimSpace(afterFence[:end])
+		}
+	}
+	// Find first { and last }
+	start := strings.Index(s, "{")
+	end := strings.LastIndex(s, "}")
+	if start >= 0 && end > start {
+		return s[start : end+1]
+	}
+	return s
 }
 
 func mergeResponses(responses []*DigestResponse) *DigestResponse {
