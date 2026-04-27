@@ -1,5 +1,7 @@
 FROM golang:1.23-alpine AS builder
 
+ARG VERSION=dev
+
 RUN apk add --no-cache gcc musl-dev nodejs npm
 
 WORKDIR /app
@@ -20,7 +22,7 @@ RUN mkdir -p static/fonts && \
     cp node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-400-italic.woff2 static/fonts/ && \
     cp node_modules/@fontsource/source-serif-4/files/source-serif-4-latin-600-normal.woff2 static/fonts/
 RUN npx @tailwindcss/cli -i static/css/input.css -o static/css/output.css --minify
-RUN CGO_ENABLED=1 go build -o /news ./cmd/news
+RUN CGO_ENABLED=1 go build -ldflags "-X main.version=${VERSION}" -o /news ./cmd/news
 
 FROM alpine:3.20
 

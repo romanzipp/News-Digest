@@ -14,12 +14,13 @@ import (
 )
 
 type Templates struct {
-	dir   string
-	funcs template.FuncMap
+	dir     string
+	version string
+	funcs   template.FuncMap
 }
 
-func New(dir string) *Templates {
-	t := &Templates{dir: dir}
+func New(dir string, version string) *Templates {
+	t := &Templates{dir: dir, version: version}
 	t.funcs = template.FuncMap{
 		"formatDate": func(s string) string {
 			t, err := time.Parse("2006-01-02", s)
@@ -69,6 +70,7 @@ func New(dir string) *Templates {
 			}
 			return m
 		},
+		"version": func() string { return t.version },
 	}
 	return t
 }

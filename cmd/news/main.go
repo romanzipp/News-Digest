@@ -21,6 +21,8 @@ import (
 	"git.romanzipp.net/romanzipp/news/internal/templates"
 )
 
+var version = "dev"
+
 func main() {
 	godotenv.Load()
 
@@ -46,7 +48,7 @@ func main() {
 	// Services
 	authSvc := auth.NewService(db)
 	authMw := auth.NewMiddleware(sessions, authSvc)
-	tmpl := templates.New("templates")
+	tmpl := templates.New("templates", version)
 
 	// Source registry
 	registry := source.NewRegistry(db)
