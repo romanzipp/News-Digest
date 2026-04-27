@@ -124,26 +124,24 @@ func (h *FeedsHandler) FreshRSSTest(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	apiPassword := r.FormValue("api_password")
 
-	// Save first so the form stays populated after redirect
-	cfg, _ := json.Marshal(source.FreshRSSConfig{
-		Username:    username,
-		APIPassword: apiPassword,
-	})
-	existing := h.loadFreshRSS(user.ID)
-	if existing != nil {
-		h.db.Exec("UPDATE sources SET url = ?, config = ?, name = 'FreshRSS' WHERE id = ?", baseURL, string(cfg), existing.ID)
-	} else {
-		h.db.Exec("INSERT INTO sources (user_id, type, name, url, config) VALUES (?, 'freshrss', 'FreshRSS', ?, ?)",
-			user.ID, baseURL, string(cfg))
-	}
-
+	var flash string
 	err := source.TestFreshRSSConnection(baseURL, username, apiPassword)
 	if err != nil {
-		h.sessions.Put(r.Context(), "flash", fmt.Sprintf("Connection failed: %v", err))
+		flash = fmt.Sprintf("Connection failed: %v", err)
 	} else {
-		h.sessions.Put(r.Context(), "flash", "Connection successful!")
+		flash = "Connection successful!"
 	}
-	http.Redirect(w, r, "/freshrss", http.StatusSeeOther)
+
+	h.tmpl.Render(w, "freshrss", map[string]any{
+		"Title": "FreshRSS",
+		"User":  user,
+		"Flash": flash,
+		"FreshRSS": &freshRSSView{
+			URL:         baseURL,
+			Username:    username,
+			APIPassword: apiPassword,
+		},
+	})
 }
 
 func (h *FeedsHandler) FetchNow(w http.ResponseWriter, r *http.Request) {
