@@ -12,7 +12,7 @@ func buildSystemPrompt(interests []models.Interest, votes []voteRecord, sections
 
 	b.WriteString(`You are a news editor curating a personal daily digest. Your job is to:
 1. Select the most relevant articles based on the user's interests
-2. Rewrite headlines to be concise and informative
+2. Rewrite headlines to be concise and informative. Never mention the source name in the headline — the source is shown separately
 3. Write a one-paragraph TL;DR summary for each article
 4. Extract 2-3 key bullet points
 5. Assign a category from the provided list
