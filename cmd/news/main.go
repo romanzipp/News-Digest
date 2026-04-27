@@ -66,6 +66,7 @@ func main() {
 	interestsH := handlers.NewInterestsHandler(db, sessions, tmpl)
 	sectionsH := handlers.NewSectionsHandler(db, sessions, tmpl)
 	votesH := handlers.NewVotesHandler(db, tmpl)
+	readH := handlers.NewReadHandler(db)
 
 	// Routes
 	mux := http.NewServeMux()
@@ -111,6 +112,8 @@ func main() {
 	mux.Handle("POST /sections/{id}/delete", authMw.RequireAuth(http.HandlerFunc(sectionsH.SectionDelete)))
 
 	mux.Handle("POST /votes", authMw.RequireAuth(http.HandlerFunc(votesH.Vote)))
+
+	mux.Handle("GET /read/{id}", authMw.RequireAuth(http.HandlerFunc(readH.MarkAndRedirect)))
 
 	// Cron scheduler
 	c := cron.New()

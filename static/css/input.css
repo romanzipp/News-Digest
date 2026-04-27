@@ -186,9 +186,8 @@
     transition: background-color 0.1s ease;
   }
 
-  .article-link:visited,
-  .article-link:visited * {
-    color: #a89a8a;
+  .article-link.is-read {
+    opacity: 0.4;
   }
 
   .article-link:hover {

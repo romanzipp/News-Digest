@@ -1,5 +1,5 @@
 {{define "secondary_story"}}
-<a href="{{.SourceURL}}" target="_blank" rel="noopener" class="article-link block">
+<a href="/read/{{.ItemID}}" target="_blank" rel="noopener" class="article-link block {{if .IsRead}}is-read{{end}}">
     {{template "category_slug" .}}
     <h2 class="secondary-headline">{{.Headline}}</h2>
     {{if .ImageURL}}

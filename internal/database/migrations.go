@@ -128,6 +128,13 @@ func sqliteMigrations() []string {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)`,
+		`CREATE TABLE IF NOT EXISTS read_items (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			digest_item_id INTEGER NOT NULL REFERENCES digest_items(id) ON DELETE CASCADE,
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			UNIQUE(user_id, digest_item_id)
+		)`,
 	}
 }
 
@@ -251,6 +258,13 @@ func postgresMigrations() []string {
 			error TEXT NOT NULL DEFAULT '',
 			created_at TIMESTAMPTZ DEFAULT NOW(),
 			updated_at TIMESTAMPTZ DEFAULT NOW()
+		)`,
+		`CREATE TABLE IF NOT EXISTS read_items (
+			id BIGSERIAL PRIMARY KEY,
+			user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			digest_item_id BIGINT NOT NULL REFERENCES digest_items(id) ON DELETE CASCADE,
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			UNIQUE(user_id, digest_item_id)
 		)`,
 	}
 }

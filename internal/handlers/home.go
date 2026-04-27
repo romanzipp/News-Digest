@@ -85,6 +85,7 @@ type itemView struct {
 	Headline   string
 	TLDR       string
 	Bullets    []string
+	IsRead     bool
 	SourceName string
 	SourceURL  string
 	ImageURL   string
@@ -212,13 +213,15 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 		`SELECT di.id, di.position, di.priority, di.category, di.headline, di.tldr, di.bullets,
 		        di.source_name, di.source_url, di.image_url, di.read_time, di.language, di.importance,
 		        COALESCE(v.value, 0),
-		        a.published_at
+		        a.published_at,
+		        CASE WHEN ri.id IS NOT NULL THEN 1 ELSE 0 END
 		 FROM digest_items di
 		 LEFT JOIN votes v ON v.digest_item_id = di.id AND v.user_id = ?
 		 LEFT JOIN articles a ON a.id = di.article_id
+		 LEFT JOIN read_items ri ON ri.digest_item_id = di.id AND ri.user_id = ?
 		 WHERE di.digest_id = ?
 		 ORDER BY di.position`,
-		userID, d.ID,
+		userID, userID, d.ID,
 	)
 	if err != nil {
 		return &d, nil, nil
@@ -232,7 +235,7 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 		var publishedAt sql.NullString
 		rows.Scan(&it.ID, &it.Position, &it.Priority, &it.Category, &it.Headline, &it.TLDR, &bulletsJSON,
 			&it.SourceName, &it.SourceURL, &it.ImageURL, &it.ReadTime, &it.Language, &it.Importance,
-			&it.UserVote, &publishedAt)
+			&it.UserVote, &publishedAt, &it.IsRead)
 		json.Unmarshal([]byte(bulletsJSON), &it.Bullets)
 		it.ItemID = it.ID
 		if publishedAt.Valid {
