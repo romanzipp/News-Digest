@@ -186,8 +186,9 @@
     transition: background-color 0.1s ease;
   }
 
-  .article-link:visited {
-    color: var(--color-muted);
+  .article-link:visited,
+  .article-link:visited * {
+    color: var(--color-rule-light);
   }
 
   .article-link:hover {
@@ -198,6 +199,10 @@
     .article-link:hover {
       background-color: rgba(255, 255, 255, 0.04);
     }
+  }
+
+  .article-desc {
+    color: var(--color-ink-soft);
   }
 
   .image-placeholder {
