@@ -9,7 +9,6 @@
 
 {{if not .Empty}}
     {{template "digest_strip" .}}
-    {{template "nav" .}}
 
     {{if gt (len .AllDigests) 1}}
     <div class="content-container flex gap-4 text-xs uppercase tracking-wider pt-3">
@@ -70,7 +69,6 @@
             <a href="/interests" class="text-xs text-muted underline">Edit interests</a>
         </div>
     </div>
-    {{template "nav" .}}
 {{end}}
 
 {{end}}
