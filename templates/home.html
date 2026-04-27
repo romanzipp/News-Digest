@@ -47,7 +47,7 @@
     {{range .GroupedRest}}
     <div class="single-rule">
         <div class="content-container pt-6 pb-4">
-            <div class="text-xs uppercase tracking-[2px] font-bold mb-4" style="color: {{.Color}}">{{.Category}}</div>
+            <div class="text-sm uppercase tracking-[2px] font-bold mb-4" style="color: {{.Color}}">{{.Category}}</div>
             <div class="grid grid-cols-3 gap-8 brief-grid">
                 {{range .Items}}
                     {{template "brief_story" .}}
