@@ -27,9 +27,11 @@ func NewGenerator(db *sql.DB, cfg *config.Config, aiClient ai.Provider, registry
 
 func (g *Generator) GenerateForUser(ctx context.Context, userID int64, isAuto bool) (*models.Digest, error) {
 	// Fetch fresh articles first
-	n, err := g.registry.FetchAllForUser(ctx, userID)
+	n, errCount, err := g.registry.FetchAllForUser(ctx, userID)
 	if err != nil {
 		log.Printf("fetch before digest for user %d: %v", userID, err)
+	} else if errCount > 0 {
+		log.Printf("fetched %d new articles for user %d (%d sources failed)", n, userID, errCount)
 	} else {
 		log.Printf("fetched %d new articles for user %d before digest", n, userID)
 	}

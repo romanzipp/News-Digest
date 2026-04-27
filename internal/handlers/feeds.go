@@ -146,9 +146,11 @@ func (h *FeedsHandler) FreshRSSTest(w http.ResponseWriter, r *http.Request) {
 
 func (h *FeedsHandler) FetchNow(w http.ResponseWriter, r *http.Request) {
 	user := auth.UserFromContext(r.Context())
-	n, err := h.registry.FetchAllForUser(context.Background(), user.ID)
+	n, errCount, err := h.registry.FetchAllForUser(context.Background(), user.ID)
 	if err != nil {
 		h.sessions.Put(r.Context(), "flash", fmt.Sprintf("Fetch error: %v", err))
+	} else if errCount > 0 {
+		h.sessions.Put(r.Context(), "flash", fmt.Sprintf("Fetched %d new articles. %d source(s) failed — check server logs.", n, errCount))
 	} else {
 		h.sessions.Put(r.Context(), "flash", fmt.Sprintf("Fetched %d new articles.", n))
 	}

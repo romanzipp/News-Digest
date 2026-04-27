@@ -41,10 +41,10 @@ func (r *Registry) FetchSource(ctx context.Context, src models.Source) ([]models
 	return p.Fetch(ctx, src)
 }
 
-func (r *Registry) FetchAllForUser(ctx context.Context, userID int64) (int, error) {
+func (r *Registry) FetchAllForUser(ctx context.Context, userID int64) (int, int, error) {
 	rows, err := r.db.Query("SELECT id, user_id, type, name, url, config, enabled FROM sources WHERE user_id = ? AND enabled = 1", userID)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	defer rows.Close()
 
@@ -56,10 +56,12 @@ func (r *Registry) FetchAllForUser(ctx context.Context, userID int64) (int, erro
 	}
 
 	totalNew := 0
+	totalErrors := 0
 	for _, src := range sources {
 		articles, err := r.FetchSource(ctx, src)
 		if err != nil {
 			log.Printf("fetch source %d (%s): %v", src.ID, src.Name, err)
+			totalErrors++
 			continue
 		}
 
@@ -79,7 +81,7 @@ func (r *Registry) FetchAllForUser(ctx context.Context, userID int64) (int, erro
 		r.db.Exec("UPDATE sources SET last_fetched_at = ? WHERE id = ?", time.Now(), src.ID)
 	}
 
-	return totalNew, nil
+	return totalNew, totalErrors, nil
 }
 
 func (r *Registry) FetchAllUsers(ctx context.Context) error {
@@ -97,12 +99,16 @@ func (r *Registry) FetchAllUsers(ctx context.Context) error {
 	}
 
 	for _, uid := range userIDs {
-		n, err := r.FetchAllForUser(ctx, uid)
+		n, errCount, err := r.FetchAllForUser(ctx, uid)
 		if err != nil {
 			log.Printf("fetch user %d: %v", uid, err)
 			continue
 		}
-		log.Printf("fetched %d new articles for user %d", n, uid)
+		if errCount > 0 {
+			log.Printf("fetched %d new articles for user %d (%d sources failed)", n, uid, errCount)
+		} else {
+			log.Printf("fetched %d new articles for user %d", n, uid)
+		}
 	}
 	return nil
 }
