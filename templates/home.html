@@ -44,16 +44,16 @@
         {{end}}
     {{end}}
 
-    {{if .GroupedRest}}
-    <div class="content-container py-6 grid grid-cols-3 gap-x-8 gap-y-6">
-        {{range .GroupedRest}}
-        <div class="space-y-4">
-            <div class="text-xs uppercase tracking-[2px] font-bold pb-2 single-rule" style="color: {{.Color}}">{{.Category}}</div>
-            {{range .Items}}
-                {{template "brief_story" .}}
-            {{end}}
+    {{range .GroupedRest}}
+    <div class="single-rule">
+        <div class="content-container pt-6 pb-4">
+            <div class="text-xs uppercase tracking-[2px] font-bold mb-4" style="color: {{.Color}}">{{.Category}}</div>
+            <div class="grid grid-cols-3 gap-8">
+                {{range .Items}}
+                    {{template "brief_story" .}}
+                {{end}}
+            </div>
         </div>
-        {{end}}
     </div>
     {{end}}
 
