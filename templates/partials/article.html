@@ -1,6 +1,6 @@
 {{define "article"}}
 {{if eq .Size "brief"}}<div class="brief-cell">{{end}}
-<a href="/read/{{.ItemID}}" target="_blank" rel="noopener" class="article-link block {{if eq .Size "lead"}}grid grid-cols-[1.3fr_1fr] gap-7{{end}} {{if eq .Size "brief"}}pb-3{{end}} {{if .IsRead}}is-read{{end}}">
+<a href="/read/{{.ItemID}}" target="_blank" rel="noopener" class="article-link block pb-3 {{if eq .Size "lead"}}grid grid-cols-[1.3fr_1fr] gap-7{{end}} {{if .IsRead}}is-read{{end}}">
     {{if eq .Size "lead"}}
     <div>
     {{end}}
