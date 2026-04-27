@@ -186,6 +186,10 @@
     transition: background-color 0.1s ease;
   }
 
+  .article-link:visited {
+    color: var(--color-muted);
+  }
+
   .article-link:hover {
     background-color: rgba(0, 0, 0, 0.03);
   }
