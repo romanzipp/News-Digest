@@ -99,7 +99,10 @@ func sqliteMigrations() []string {
 			bullets TEXT NOT NULL DEFAULT '[]',
 			source_name TEXT NOT NULL DEFAULT '',
 			source_url TEXT NOT NULL DEFAULT '',
-			language TEXT NOT NULL DEFAULT ''
+			language TEXT NOT NULL DEFAULT '',
+			severity TEXT NOT NULL DEFAULT 'medium',
+			indicator TEXT NOT NULL DEFAULT '',
+			published_at TEXT NOT NULL DEFAULT ''
 		)`,
 		`CREATE TABLE IF NOT EXISTS interests (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -230,7 +233,10 @@ func postgresMigrations() []string {
 			bullets JSONB NOT NULL DEFAULT '[]',
 			source_name TEXT NOT NULL DEFAULT '',
 			source_url TEXT NOT NULL DEFAULT '',
-			language TEXT NOT NULL DEFAULT ''
+			language TEXT NOT NULL DEFAULT '',
+			severity TEXT NOT NULL DEFAULT 'medium',
+			indicator TEXT NOT NULL DEFAULT '',
+			published_at TEXT NOT NULL DEFAULT ''
 		)`,
 		`CREATE TABLE IF NOT EXISTS interests (
 			id BIGSERIAL PRIMARY KEY,

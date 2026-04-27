@@ -220,7 +220,7 @@
   }
 
   .section-wire-item {
-    @apply block py-3 border-t border-rule;
+    @apply flex items-baseline gap-2 py-2.5 border-t border-rule;
     text-decoration: none;
     color: inherit;
     transition: background-color 0.1s ease;
@@ -230,16 +230,38 @@
     background: rgba(0, 0, 0, 0.02);
   }
 
+  .section-wire-meta {
+    @apply flex items-center gap-2 shrink-0;
+  }
+
+  .section-wire-time {
+    @apply text-xs text-muted;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+
+  .section-severity {
+    @apply w-2 h-2 rounded-full shrink-0;
+  }
+
+  .section-severity-high {
+    background: #9a2222;
+  }
+
+  .section-severity-med {
+    background: #c87a20;
+  }
+
+  .section-severity-low {
+    background: #b8a440;
+  }
+
+  .section-wire-indicator {
+    @apply text-[10px] text-muted;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+
   .section-wire-headline {
-    @apply block text-sm font-bold leading-snug mb-1;
-  }
-
-  .section-wire-desc {
-    @apply block text-xs leading-snug text-muted;
-  }
-
-  .section-wire-source {
-    @apply block text-[10px] uppercase tracking-wider text-rule-light mt-1.5;
+    @apply text-sm leading-snug;
   }
 
   @media (prefers-color-scheme: dark) {

@@ -66,9 +66,12 @@
             <div class="grid grid-cols-3 gap-x-12">
                 {{range .Items}}
                 <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-item">
+                    <span class="section-wire-meta">
+                        {{if .TimeFormatted}}<span class="section-wire-time">{{.TimeFormatted}}</span>{{end}}
+                        <span class="section-severity section-severity-{{.Severity}}"></span>
+                        {{if .Indicator}}<span class="section-wire-indicator">{{.Indicator}}</span>{{end}}
+                    </span>
                     <span class="section-wire-headline">{{.Headline}}</span>
-                    <span class="section-wire-desc">{{.TLDR}}</span>
-                    <span class="section-wire-source">{{.SourceName}}</span>
                 </a>
                 {{end}}
             </div>

@@ -42,6 +42,9 @@ type SectionItemResponse struct {
 	SourceName  string   `json:"source_name"`
 	SourceURL   string   `json:"source_url"`
 	Language    string   `json:"language"`
+	Severity    string   `json:"severity"`
+	Indicator   string   `json:"indicator"`
+	PublishedAt string   `json:"published_at"`
 }
 
 type TrendingResponse struct {

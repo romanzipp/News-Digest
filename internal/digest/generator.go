@@ -333,10 +333,10 @@ func (g *Generator) storeDigest(userID int64, isAuto int, resp *DigestResponse, 
 			bullets, _ := json.Marshal(item.Bullets)
 
 			tx.Exec(
-				`INSERT INTO section_items (digest_id, section_id, article_id, position, headline, tldr, bullets, source_name, source_url, language)
-				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				`INSERT INTO section_items (digest_id, section_id, article_id, position, headline, tldr, bullets, source_name, source_url, language, severity, indicator, published_at)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 				digestID, sec.SectionID, articleID, j, item.Headline, item.TLDR, string(bullets),
-				item.SourceName, item.SourceURL, item.Language,
+				item.SourceName, item.SourceURL, item.Language, item.Severity, item.Indicator, item.PublishedAt,
 			)
 		}
 	}

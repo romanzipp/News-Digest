@@ -81,9 +81,10 @@ Respond with valid JSON in this exact structure:
       "items": [
         {
           "article_guid": "...",
-          "headline": "...",
-          "tldr": "...",
-          "bullets": ["..."],
+          "headline": "short single-line summary of the item",
+          "severity": "high",
+          "indicator": "CVE-2026-1234 or AAPL or short identifier",
+          "published_at": "2026-04-27T08:00:00Z",
           "source_name": "...",
           "source_url": "...",
           "language": "..."
@@ -99,7 +100,12 @@ Respond with valid JSON in this exact structure:
 }
 
 Select at most 20 articles for the main items. Order by priority descending.
-For section items, keep the tldr very short — 1-2 sentences maximum, like a brief alert.
+
+For section items:
+- "headline" is a single short summary line (no separate description)
+- "severity" must be one of: "high", "med", "low"
+- "indicator" is a short monospaced identifier relevant to the section context (e.g. CVE number, stock ticker, incident ID, country code). Keep it very short. Leave empty if none applies.
+- "published_at" is the ISO 8601 timestamp of the original article
 `)
 
 	return b.String()
