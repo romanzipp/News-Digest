@@ -100,19 +100,19 @@
 
   .lead-headline {
     font-family: var(--font-masthead);
-    @apply text-[42px] font-black leading-[1.05] my-2;
+    @apply text-[42px] font-black leading-[1.05] mt-2 mb-4;
     letter-spacing: -0.8px;
   }
 
   .secondary-headline {
     font-family: var(--font-masthead);
-    @apply text-[26px] font-bold leading-[1.15] my-1.5;
+    @apply text-[26px] font-bold leading-[1.15] mt-1.5 mb-3;
     letter-spacing: -0.3px;
   }
 
   .brief-headline {
     font-family: var(--font-masthead);
-    @apply text-xl font-bold leading-[1.2] my-1;
+    @apply text-xl font-bold leading-[1.2] mt-1 mb-2;
   }
 
   .tldr {
