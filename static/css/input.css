@@ -215,7 +215,7 @@
   }
 
   .section-header-label {
-    @apply inline-block px-4 text-sm uppercase tracking-[3px] font-bold;
+    @apply inline-block px-4 text-3xl font-black tracking-tight;
     font-family: var(--font-masthead);
   }
 
@@ -235,7 +235,7 @@
   }
 
   .section-wire-time {
-    @apply text-xs text-muted;
+    @apply text-sm font-bold text-ink-soft;
     font-family: ui-monospace, Menlo, monospace;
   }
 
@@ -256,7 +256,7 @@
   }
 
   .section-wire-indicator {
-    @apply text-[10px] text-muted;
+    @apply text-xs font-bold text-ink-soft;
     font-family: ui-monospace, Menlo, monospace;
   }
 
