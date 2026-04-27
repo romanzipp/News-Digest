@@ -290,6 +290,19 @@
     }
   }
 
+  .copy-toast {
+    @apply flex gap-2 items-center mt-1;
+  }
+
+  .copy-toast-input {
+    @apply text-xs border border-rule px-2 py-1 bg-cream text-ink w-80;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+
+  .copy-toast-input:focus {
+    @apply outline-none border-ink;
+  }
+
   .article-desc {
     color: var(--color-ink-soft);
   }

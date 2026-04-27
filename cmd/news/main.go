@@ -67,6 +67,7 @@ func main() {
 	sectionsH := handlers.NewSectionsHandler(db, sessions, tmpl)
 	votesH := handlers.NewVotesHandler(db, tmpl)
 	readH := handlers.NewReadHandler(db)
+	copyH := handlers.NewCopyHandler(db, tmpl)
 
 	// Routes
 	mux := http.NewServeMux()
@@ -115,6 +116,10 @@ func main() {
 	mux.Handle("POST /votes", authMw.RequireAuth(http.HandlerFunc(votesH.Vote)))
 
 	mux.Handle("GET /read/{id}", authMw.RequireAuth(http.HandlerFunc(readH.MarkAndRedirect)))
+	mux.Handle("GET /copy/{id}", authMw.RequireAuth(http.HandlerFunc(copyH.CopyMarkdown)))
+	mux.HandleFunc("GET /empty", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+	})
 
 	// Cron scheduler
 	c := cron.New()
