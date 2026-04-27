@@ -330,12 +330,11 @@ func (g *Generator) storeDigest(userID int64, isAuto int, resp *DigestResponse, 
 	for _, sec := range resp.Sections {
 		for j, item := range sec.Items {
 			articleID := g.findArticleID(userID, item.ArticleGUID)
-			bullets, _ := json.Marshal(item.Bullets)
 
 			tx.Exec(
-				`INSERT INTO section_items (digest_id, section_id, article_id, position, headline, tldr, bullets, source_name, source_url, language, severity, indicator, published_at)
-				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-				digestID, sec.SectionID, articleID, j, item.Headline, item.TLDR, string(bullets),
+				`INSERT INTO section_items (digest_id, section_id, article_id, position, headline, source_name, source_url, language, severity, indicator, published_at)
+				 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				digestID, sec.SectionID, articleID, j, item.Headline,
 				item.SourceName, item.SourceURL, item.Language, item.Severity, item.Indicator, item.PublishedAt,
 			)
 		}

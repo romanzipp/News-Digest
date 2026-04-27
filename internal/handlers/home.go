@@ -380,21 +380,19 @@ type digestSectionView struct {
 }
 
 type sectionItemView struct {
-	Headline    string
-	TLDR        string
-	Bullets     []string
-	SourceName  string
-	SourceURL   string
-	Language    string
-	Severity    string
-	Indicator   string
-	PublishedAt string
+	Headline      string
+	SourceName    string
+	SourceURL     string
+	Language      string
+	Severity      string
+	Indicator     string
+	PublishedAt   string
 	TimeFormatted string
 }
 
 func (h *HomeHandler) loadSections(digestID int64) []digestSectionView {
 	rows, err := h.db.Query(
-		`SELECT cs.title, si.headline, si.tldr, si.bullets, si.source_name, si.source_url, si.language, si.severity, si.indicator, si.published_at
+		`SELECT cs.title, si.headline, si.source_name, si.source_url, si.language, si.severity, si.indicator, si.published_at
 		 FROM section_items si
 		 JOIN custom_sections cs ON cs.id = si.section_id
 		 WHERE si.digest_id = ?
@@ -411,9 +409,7 @@ func (h *HomeHandler) loadSections(digestID int64) []digestSectionView {
 	for rows.Next() {
 		var title string
 		var item sectionItemView
-		var bulletsJSON string
-		rows.Scan(&title, &item.Headline, &item.TLDR, &bulletsJSON, &item.SourceName, &item.SourceURL, &item.Language, &item.Severity, &item.Indicator, &item.PublishedAt)
-		json.Unmarshal([]byte(bulletsJSON), &item.Bullets)
+		rows.Scan(&title, &item.Headline, &item.SourceName, &item.SourceURL, &item.Language, &item.Severity, &item.Indicator, &item.PublishedAt)
 		item.TimeFormatted = formatSectionTime(item.PublishedAt)
 
 		if _, ok := sectionMap[title]; !ok {

@@ -35,16 +35,14 @@ type SectionResponse struct {
 }
 
 type SectionItemResponse struct {
-	ArticleGUID string   `json:"article_guid"`
-	Headline    string   `json:"headline"`
-	TLDR        string   `json:"tldr"`
-	Bullets     []string `json:"bullets"`
-	SourceName  string   `json:"source_name"`
-	SourceURL   string   `json:"source_url"`
-	Language    string   `json:"language"`
-	Severity    string   `json:"severity"`
-	Indicator   string   `json:"indicator"`
-	PublishedAt string   `json:"published_at"`
+	ArticleGUID string `json:"article_guid"`
+	Headline    string `json:"headline"`
+	SourceName  string `json:"source_name"`
+	SourceURL   string `json:"source_url"`
+	Language    string `json:"language"`
+	Severity    string `json:"severity"`
+	Indicator   string `json:"indicator"`
+	PublishedAt string `json:"published_at"`
 }
 
 type TrendingResponse struct {
