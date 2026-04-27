@@ -77,14 +77,10 @@
 
 {{define "digest_strip"}}
 <div class="single-rule">
-    <div class="content-container flex justify-between py-2.5 text-xs text-muted uppercase tracking-wider">
+    <div class="content-container grid grid-cols-[1fr_auto_1fr] items-center py-2.5 text-xs text-muted uppercase tracking-wider">
         <span>Today's brief · prepared {{if .Digest}}{{.Digest.GeneratedAt.Format "15:04"}} local{{end}}</span>
-        <span>
-            {{if .Digest}}
-            {{.Digest.ArticlesReviewed}} reviewed · {{.Digest.ArticlesSurfaced}} surfaced
-            {{end}}
-        </span>
-        <span>
+        <span>{{if .Digest}}{{.DigestMeta.FeedsCount}} feeds · {{.Digest.ArticlesReviewed}} reviewed · {{.Digest.ArticlesSurfaced}} surfaced{{end}}</span>
+        <span class="text-right">
             <form method="POST" action="/digest/generate" class="inline">
                 <button type="submit" class="text-muted hover:text-ink underline cursor-pointer" style="font-family: inherit; font-size: inherit; background: none; border: none;">Re-generate</button>
             </form>
