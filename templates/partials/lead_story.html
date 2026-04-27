@@ -3,7 +3,7 @@
     <div>
         {{template "category_slug" .}}
         <h1 class="lead-headline">{{.Headline}}</h1>
-        <div class="tldr mb-4">{{.TLDR}}</div>
+        <div class="article-desc text-lg leading-snug mb-4">{{.TLDR}}</div>
         {{if .Bullets}}
         <ul class="story-bullets mb-4">
             {{range .Bullets}}<li>{{.}}</li>{{end}}
