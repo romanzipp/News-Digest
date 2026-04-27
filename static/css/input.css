@@ -138,7 +138,7 @@
   }
 
   .story-bullets {
-    @apply pl-5 text-sm leading-relaxed;
+    @apply pl-5 text-sm leading-relaxed list-disc;
     color: var(--color-ink-soft);
   }
 
