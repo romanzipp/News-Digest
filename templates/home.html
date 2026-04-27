@@ -24,7 +24,7 @@
         {{with index .TopItems 0}}
         <div class="single-rule">
             <div class="content-container pt-8 pb-6">
-                {{template "lead_story" .}}
+                {{template "article" .}}
             </div>
         </div>
         {{end}}
@@ -33,11 +33,11 @@
         <div class="single-rule">
             <div class="content-container py-7 grid grid-cols-[1fr_1px_1fr] gap-7">
                 {{if gt (len $.TopItems) 1}}
-                    {{with index $.TopItems 1}}{{template "secondary_story" .}}{{end}}
+                    {{with index $.TopItems 1}}{{template "article" .}}{{end}}
                 {{end}}
                 <div class="bg-rule"></div>
                 {{if gt (len $.TopItems) 2}}
-                    {{with index $.TopItems 2}}{{template "secondary_story" .}}{{end}}
+                    {{with index $.TopItems 2}}{{template "article" .}}{{end}}
                 {{end}}
             </div>
         </div>
@@ -50,7 +50,7 @@
             <div class="text-sm uppercase tracking-[2px] font-bold mb-4" style="color: {{.Color}}">{{.Category}}</div>
             <div class="grid grid-cols-3 gap-8 brief-grid">
                 {{range .Items}}
-                    {{template "brief_story" .}}
+                    {{template "article" .}}
                 {{end}}
             </div>
         </div>

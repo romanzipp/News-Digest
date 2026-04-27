@@ -1,0 +1,40 @@
+{{define "article"}}
+{{if eq .Size "brief"}}<div class="brief-cell">{{end}}
+<a href="/read/{{.ItemID}}" target="_blank" rel="noopener" class="article-link block {{if eq .Size "lead"}}grid grid-cols-[1.3fr_1fr] gap-7{{end}} {{if .IsRead}}is-read{{end}}">
+    {{if eq .Size "lead"}}
+    <div>
+    {{end}}
+
+    {{if ne .Size "brief"}}{{template "category_slug" .}}{{end}}
+
+    {{if eq .Size "lead"}}<h1 class="lead-headline">{{.Headline}}</h1>{{end}}
+    {{if eq .Size "secondary"}}<h2 class="secondary-headline">{{.Headline}}</h2>{{end}}
+    {{if eq .Size "brief"}}<h3 class="brief-headline">{{.Headline}}</h3>{{end}}
+
+    {{if and (ne .Size "lead") .ImageURL}}
+    <img src="{{proxyURL .ImageURL}}" alt="" class="w-full {{if eq .Size "secondary"}}h-[120px]{{else}}h-[100px]{{end}} object-cover rounded-sm {{if eq .Size "secondary"}}mb-0{{else}}mb-3{{end}}">
+    {{end}}
+
+    <div class="article-desc {{if eq .Size "lead"}}text-lg leading-snug mb-4{{else if eq .Size "secondary"}}text-base leading-relaxed mt-3 mb-3{{else}}text-base leading-snug mb-3{{end}}">{{.TLDR}}</div>
+
+    {{if and (ne .Size "brief") .Bullets}}
+    <ul class="story-bullets {{if eq .Size "secondary"}}text-[13px] mb-2.5{{else}}mb-4{{end}}">
+        {{range .Bullets}}<li>{{.}}</li>{{end}}
+    </ul>
+    {{end}}
+
+    {{template "byline" .}}
+
+    {{if eq .Size "lead"}}
+    </div>
+    <div>
+        {{if .ImageURL}}
+        <img src="{{proxyURL .ImageURL}}" alt="" class="w-full h-[260px] object-cover rounded-sm">
+        {{else}}
+        <div class="image-placeholder h-[260px]">hero · {{lower .Category}}</div>
+        {{end}}
+    </div>
+    {{end}}
+</a>
+{{if eq .Size "brief"}}</div>{{end}}
+{{end}}

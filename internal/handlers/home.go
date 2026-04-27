@@ -86,6 +86,7 @@ type itemView struct {
 	TLDR       string
 	Bullets    []string
 	IsRead     bool
+	Size       string
 	SourceName string
 	SourceURL  string
 	ImageURL   string
@@ -145,6 +146,15 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	if len(top) > 3 {
 		rest = top[3:]
 		top = top[:3]
+	}
+	if len(top) > 0 {
+		top[0].Size = "lead"
+	}
+	for i := 1; i < len(top); i++ {
+		top[i].Size = "secondary"
+	}
+	for i := range rest {
+		rest[i].Size = "brief"
 	}
 	data["TopItems"] = top
 	data["RestItems"] = rest
