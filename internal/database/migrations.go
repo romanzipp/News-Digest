@@ -102,10 +102,6 @@ func sqliteMigrations() []string {
 			indicator TEXT NOT NULL DEFAULT '',
 			published_at TEXT NOT NULL DEFAULT ''
 		)`,
-		// migrate existing section_items tables
-		`ALTER TABLE section_items ADD COLUMN severity TEXT NOT NULL DEFAULT 'med'`,
-		`ALTER TABLE section_items ADD COLUMN indicator TEXT NOT NULL DEFAULT ''`,
-		`ALTER TABLE section_items ADD COLUMN published_at TEXT NOT NULL DEFAULT ''`,
 		`CREATE TABLE IF NOT EXISTS interests (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -133,7 +129,6 @@ func sqliteMigrations() []string {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)`,
-		`ALTER TABLE read_items RENAME TO read_items_old`,
 		`CREATE TABLE IF NOT EXISTS read_items (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -141,7 +136,6 @@ func sqliteMigrations() []string {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			UNIQUE(user_id, article_id)
 		)`,
-		`DROP TABLE IF EXISTS read_items_old`,
 	}
 }
 

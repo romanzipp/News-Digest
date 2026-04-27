@@ -36,9 +36,6 @@ func Open(cfg *config.Config) (*sql.DB, error) {
 func Migrate(db *sql.DB, driver string) error {
 	for _, stmt := range migrations(driver) {
 		if _, err := db.Exec(stmt); err != nil {
-			if strings.Contains(stmt, "ALTER TABLE") {
-				continue // ignore ALTER errors (column may already exist)
-			}
 			return fmt.Errorf("migration failed: %w\nSQL: %s", err, stmt)
 		}
 	}
