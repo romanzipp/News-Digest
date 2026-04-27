@@ -25,8 +25,170 @@ func NewGenerator(db *sql.DB, cfg *config.Config, aiClient ai.Provider, registry
 	return &Generator{db: db, cfg: cfg, ai: aiClient, registry: registry}
 }
 
+func (g *Generator) CreateJob(userID int64) (int64, error) {
+	result, err := g.db.Exec(
+		"INSERT INTO digest_jobs (user_id, status, step) VALUES (?, 'pending', 'Starting...')",
+		userID,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
+func (g *Generator) updateJob(jobID int64, status, step string, currentBatch, totalBatches int) {
+	g.db.Exec(
+		"UPDATE digest_jobs SET status = ?, step = ?, current_batch = ?, total_batches = ?, updated_at = ? WHERE id = ?",
+		status, step, currentBatch, totalBatches, time.Now(), jobID,
+	)
+}
+
+func (g *Generator) finishJob(jobID int64, digestID int64) {
+	g.db.Exec(
+		"UPDATE digest_jobs SET status = 'complete', step = 'Done', digest_id = ?, updated_at = ? WHERE id = ?",
+		digestID, time.Now(), jobID,
+	)
+}
+
+func (g *Generator) failJob(jobID int64, err error) {
+	g.db.Exec(
+		"UPDATE digest_jobs SET status = 'failed', step = ?, updated_at = ? WHERE id = ?",
+		err.Error(), time.Now(), jobID,
+	)
+}
+
+type JobStatus struct {
+	ID           int64
+	UserID       int64
+	Status       string
+	Step         string
+	CurrentBatch int
+	TotalBatches int
+	DigestID     sql.NullInt64
+	Error        string
+}
+
+func (g *Generator) GetJob(jobID int64) (*JobStatus, error) {
+	var j JobStatus
+	err := g.db.QueryRow(
+		"SELECT id, user_id, status, step, current_batch, total_batches, digest_id, error FROM digest_jobs WHERE id = ?",
+		jobID,
+	).Scan(&j.ID, &j.UserID, &j.Status, &j.Step, &j.CurrentBatch, &j.TotalBatches, &j.DigestID, &j.Error)
+	if err != nil {
+		return nil, err
+	}
+	return &j, nil
+}
+
+func (g *Generator) ActiveJobForUser(userID int64) (*JobStatus, error) {
+	var j JobStatus
+	err := g.db.QueryRow(
+		"SELECT id, user_id, status, step, current_batch, total_batches, digest_id, error FROM digest_jobs WHERE user_id = ? AND status IN ('pending', 'fetching', 'generating') ORDER BY id DESC LIMIT 1",
+		userID,
+	).Scan(&j.ID, &j.UserID, &j.Status, &j.Step, &j.CurrentBatch, &j.TotalBatches, &j.DigestID, &j.Error)
+	if err != nil {
+		return nil, err
+	}
+	return &j, nil
+}
+
+func (g *Generator) GenerateAsync(jobID, userID int64) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	g.updateJob(jobID, "fetching", "Fetching articles from feeds...", 0, 0)
+
+	n, errCount, err := g.registry.FetchAllForUser(ctx, userID)
+	if err != nil {
+		log.Printf("fetch before digest for user %d: %v", userID, err)
+	} else if errCount > 0 {
+		log.Printf("fetched %d new articles for user %d (%d sources failed)", n, userID, errCount)
+	} else {
+		log.Printf("fetched %d new articles for user %d before digest", n, userID)
+	}
+
+	g.updateJob(jobID, "generating", "Loading articles...", 0, 0)
+
+	articles, err := g.loadRecentArticles(userID)
+	if err != nil {
+		g.failJob(jobID, fmt.Errorf("load articles: %w", err))
+		return
+	}
+	if len(articles) == 0 {
+		g.failJob(jobID, fmt.Errorf("no articles to digest"))
+		return
+	}
+
+	interests := g.loadInterests(userID)
+	votes := g.loadVoteHistory(userID)
+	sections := g.loadSections(userID)
+
+	systemPrompt := buildSystemPrompt(interests, votes, sections, models.DefaultCategories)
+	systemTokens := estimateTokens(systemPrompt)
+
+	maxContext := g.cfg.AIMaxContext
+	if maxContext == 0 {
+		maxContext = 128000
+	}
+	contextBudget := int(float64(maxContext) * 0.8)
+
+	batches := splitIntoBatches(articles, contextBudget, systemTokens)
+	totalBatches := len(batches)
+	log.Printf("digest for user %d: %d articles in %d batches", userID, len(articles), totalBatches)
+
+	g.updateJob(jobID, "generating", fmt.Sprintf("Processing batch 1/%d...", totalBatches), 0, totalBatches)
+
+	var responses []*DigestResponse
+	for i, batch := range batches {
+		g.updateJob(jobID, "generating", fmt.Sprintf("Processing batch %d/%d...", i+1, totalBatches), i, totalBatches)
+
+		articlePrompt := buildArticlePrompt(batch)
+
+		raw, err := g.ai.Complete(ctx, systemPrompt, articlePrompt)
+		if err != nil {
+			g.failJob(jobID, fmt.Errorf("AI call batch %d: %w", i, err))
+			return
+		}
+
+		resp, err := parseResponse(raw)
+		if err != nil {
+			log.Printf("parse error on batch %d, retrying: %v", i, err)
+			g.updateJob(jobID, "generating", fmt.Sprintf("Retrying batch %d/%d...", i+1, totalBatches), i, totalBatches)
+
+			raw, err = g.ai.Complete(ctx, systemPrompt+"\n\nIMPORTANT: Respond with valid JSON only.", articlePrompt)
+			if err != nil {
+				g.failJob(jobID, fmt.Errorf("AI retry batch %d: %w", i, err))
+				return
+			}
+			resp, err = parseResponse(raw)
+			if err != nil {
+				g.failJob(jobID, fmt.Errorf("parse retry batch %d: %w", i, err))
+				return
+			}
+		}
+
+		responses = append(responses, resp)
+	}
+
+	g.updateJob(jobID, "generating", "Saving digest...", totalBatches, totalBatches)
+
+	merged := mergeResponses(responses)
+	rawJSON, _ := json.Marshal(merged)
+
+	feedCount := g.countFeeds(userID)
+
+	digest, err := g.storeDigest(userID, 0, merged, feedCount, string(rawJSON))
+	if err != nil {
+		g.failJob(jobID, fmt.Errorf("store digest: %w", err))
+		return
+	}
+
+	g.finishJob(jobID, digest.ID)
+	log.Printf("digest job %d complete for user %d: digest %d", jobID, userID, digest.ID)
+}
+
+// GenerateForUser is used by the cron scheduler (synchronous)
 func (g *Generator) GenerateForUser(ctx context.Context, userID int64, isAuto bool) (*models.Digest, error) {
-	// Fetch fresh articles first
 	n, errCount, err := g.registry.FetchAllForUser(ctx, userID)
 	if err != nil {
 		log.Printf("fetch before digest for user %d: %v", userID, err)
@@ -71,7 +233,6 @@ func (g *Generator) GenerateForUser(ctx context.Context, userID int64, isAuto bo
 
 		resp, err := parseResponse(raw)
 		if err != nil {
-			// Retry once
 			log.Printf("parse error on batch %d, retrying: %v", i, err)
 			raw, err = g.ai.Complete(ctx, systemPrompt+"\n\nIMPORTANT: Respond with valid JSON only.", articlePrompt)
 			if err != nil {

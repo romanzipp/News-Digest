@@ -1,0 +1,14 @@
+{{define "generating_status"}}
+<div class="card text-center py-8">
+    <div class="text-sm uppercase tracking-wider text-muted mb-4">{{.Job.Status}}</div>
+    <div class="text-lg font-semibold mb-3" style="font-family: var(--font-masthead)">{{.Job.Step}}</div>
+    {{if gt .Job.TotalBatches 0}}
+    <div class="w-full bg-rule rounded-sm h-2 mb-3 max-w-xs mx-auto">
+        <div class="bg-ink h-2 rounded-sm transition-all" style="width: {{.Percent}}%"></div>
+    </div>
+    <div class="text-xs text-muted">Batch {{.Job.CurrentBatch}} of {{.Job.TotalBatches}}</div>
+    {{else}}
+    <div class="text-xs text-muted italic">Preparing...</div>
+    {{end}}
+</div>
+{{end}}

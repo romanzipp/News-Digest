@@ -1,0 +1,10 @@
+{{define "content"}}
+{{template "masthead" .}}
+<div class="max-w-lg mx-auto px-12 py-16 text-center">
+    <h2 class="text-2xl font-bold mb-6" style="font-family: var(--font-masthead)">Generating Your Digest</h2>
+
+    <div id="progress" hx-get="/digest/generating/{{.JobID}}/status" hx-trigger="every 2s" hx-swap="innerHTML">
+        {{template "generating_status" .}}
+    </div>
+</div>
+{{end}}

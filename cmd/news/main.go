@@ -87,6 +87,8 @@ func main() {
 	mux.Handle("GET /digest/{date}", authMw.RequireAuth(http.HandlerFunc(homeH.DigestByDate)))
 	mux.Handle("GET /digest/{date}/{id}", authMw.RequireAuth(http.HandlerFunc(homeH.DigestByID)))
 	mux.Handle("POST /digest/generate", authMw.RequireAuth(http.HandlerFunc(digestH.Generate)))
+	mux.Handle("GET /digest/generating/{jobID}", authMw.RequireAuth(http.HandlerFunc(digestH.GeneratingPage)))
+	mux.Handle("GET /digest/generating/{jobID}/status", authMw.RequireAuth(http.HandlerFunc(digestH.GeneratingStatus)))
 
 	mux.Handle("GET /feeds", authMw.RequireAuth(http.HandlerFunc(feedsH.FeedsPage)))
 	mux.Handle("POST /feeds", authMw.RequireAuth(http.HandlerFunc(feedsH.FeedAdd)))

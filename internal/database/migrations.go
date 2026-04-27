@@ -116,6 +116,18 @@ func sqliteMigrations() []string {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			UNIQUE(user_id, digest_item_id)
 		)`,
+		`CREATE TABLE IF NOT EXISTS digest_jobs (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			status TEXT NOT NULL DEFAULT 'pending',
+			step TEXT NOT NULL DEFAULT '',
+			current_batch INTEGER NOT NULL DEFAULT 0,
+			total_batches INTEGER NOT NULL DEFAULT 0,
+			digest_id INTEGER,
+			error TEXT NOT NULL DEFAULT '',
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		)`,
 	}
 }
 
@@ -227,6 +239,18 @@ func postgresMigrations() []string {
 			value INT NOT NULL,
 			created_at TIMESTAMPTZ DEFAULT NOW(),
 			UNIQUE(user_id, digest_item_id)
+		)`,
+		`CREATE TABLE IF NOT EXISTS digest_jobs (
+			id BIGSERIAL PRIMARY KEY,
+			user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+			status TEXT NOT NULL DEFAULT 'pending',
+			step TEXT NOT NULL DEFAULT '',
+			current_batch INT NOT NULL DEFAULT 0,
+			total_batches INT NOT NULL DEFAULT 0,
+			digest_id BIGINT,
+			error TEXT NOT NULL DEFAULT '',
+			created_at TIMESTAMPTZ DEFAULT NOW(),
+			updated_at TIMESTAMPTZ DEFAULT NOW()
 		)`,
 	}
 }
