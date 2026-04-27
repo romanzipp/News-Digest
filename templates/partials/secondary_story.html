@@ -1,7 +1,7 @@
 {{define "secondary_story"}}
-<article>
+<a href="{{.SourceURL}}" target="_blank" rel="noopener" class="article-link block">
     {{template "category_slug" .}}
-    <h2 class="secondary-headline"><a href="{{.SourceURL}}" target="_blank" rel="noopener" class="hover:underline" style="text-decoration:none;color:inherit">{{.Headline}}</a></h2>
+    <h2 class="secondary-headline">{{.Headline}}</h2>
     {{if .ImageURL}}
     <img src="{{proxyURL .ImageURL}}" alt="" class="w-full h-[120px] object-cover rounded-sm">
     {{else}}
@@ -14,5 +14,5 @@
     </ul>
     {{end}}
     {{template "byline" .}}
-</article>
+</a>
 {{end}}

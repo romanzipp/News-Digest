@@ -176,6 +176,26 @@
     @apply border border-rule p-6 bg-cream;
   }
 
+  .article-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: -0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.1s ease;
+  }
+
+  .article-link:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .article-link:hover {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+  }
+
   .image-placeholder {
     @apply w-full flex items-center justify-center text-muted text-xs uppercase tracking-wider rounded-sm;
     font-family: ui-monospace, Menlo, monospace;
