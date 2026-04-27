@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -97,6 +98,7 @@ func (c *freshRSSClient) login(ctx context.Context) error {
 
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != 200 {
+		log.Printf("freshrss login: status=%s url=%s body=%s", resp.Status, c.baseURL, truncate(body, 500))
 		return fmt.Errorf("login failed: %s", resp.Status)
 	}
 
@@ -106,6 +108,7 @@ func (c *freshRSSClient) login(ctx context.Context) error {
 			return nil
 		}
 	}
+	log.Printf("freshrss login: no auth token in response body=%s", truncate(body, 500))
 	return fmt.Errorf("no auth token in response")
 }
 
@@ -152,7 +155,19 @@ func (c *freshRSSClient) fetchItems(ctx context.Context, since time.Time) ([]mod
 
 		body, _ := io.ReadAll(resp.Body)
 		resp.Body.Close()
+
+		if resp.StatusCode != 200 {
+			log.Printf("freshrss fetch: status=%s url=%s body=%s", resp.Status, u, truncate(body, 500))
+			return nil, fmt.Errorf("fetch items failed: %s", resp.Status)
+		}
+
+		if len(body) == 0 {
+			log.Printf("freshrss fetch: empty response body url=%s", u)
+			return nil, fmt.Errorf("fetch items: empty response")
+		}
+
 		if err := json.Unmarshal(body, &result); err != nil {
+			log.Printf("freshrss fetch: json parse error url=%s body=%s", u, truncate(body, 500))
 			return nil, fmt.Errorf("parse items: %w", err)
 		}
 
@@ -185,4 +200,11 @@ func (c *freshRSSClient) fetchItems(ctx context.Context, since time.Time) ([]mod
 	}
 
 	return allArticles, nil
+}
+
+func truncate(b []byte, max int) string {
+	if len(b) <= max {
+		return string(b)
+	}
+	return string(b[:max]) + "..."
 }
