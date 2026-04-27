@@ -211,7 +211,7 @@
   }
 
   .section-card {
-    @apply block flex-shrink-0 w-64 p-4 border-l-[3px] border-ink rounded-sm;
+    @apply block p-4 border-l-[3px] border-ink rounded-sm;
     background: rgba(0, 0, 0, 0.02);
     text-decoration: none;
     color: inherit;

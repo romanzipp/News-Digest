@@ -61,7 +61,7 @@
     <div class="single-rule">
         <div class="max-w-[90rem] mx-auto px-12 pt-6 pb-4">
             <div class="text-sm uppercase tracking-[2px] font-bold mb-4 text-ink">{{.Title}}</div>
-            <div class="flex gap-4 overflow-x-auto pb-2">
+            <div class="grid grid-cols-4 gap-4">
                 {{range .Items}}
                 <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-card">
                     <div class="text-sm font-bold leading-snug mb-2" style="font-family: var(--font-masthead)">{{.Headline}}</div>
