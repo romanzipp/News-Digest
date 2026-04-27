@@ -4,7 +4,19 @@
         <div class="flex justify-between items-baseline mb-3 text-[11px] uppercase tracking-wider text-muted">
             <span>{{if .User}}{{.User.Username}}{{else}}Guest{{end}}</span>
             <span>{{.DateFormatted}}</span>
-            <span>Est. 2024 · Self-hosted</span>
+            <span class="flex gap-3">
+                <a href="/feeds" class="hover:text-ink">Feeds</a>
+                <span>·</span>
+                <a href="/interests" class="hover:text-ink">Interests</a>
+                <span>·</span>
+                <a href="/sections" class="hover:text-ink">Sections</a>
+                {{if .User}}
+                <span>·</span>
+                <form method="POST" action="/logout" class="inline">
+                    <button type="submit" class="hover:text-ink cursor-pointer" style="font-family:inherit;font-size:inherit;background:none;border:none;padding:0;text-transform:uppercase;letter-spacing:inherit;color:inherit">Logout</button>
+                </form>
+                {{end}}
+            </span>
         </div>
         <a href="/" class="masthead-title block no-underline" style="text-decoration:none;color:inherit">The Daily Digest</a>
         <div class="text-center italic text-[13px] mt-2 text-muted">
