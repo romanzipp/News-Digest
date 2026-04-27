@@ -211,9 +211,11 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 	rows, err := h.db.Query(
 		`SELECT di.id, di.position, di.priority, di.category, di.headline, di.tldr, di.bullets,
 		        di.source_name, di.source_url, di.image_url, di.read_time, di.language, di.importance,
-		        COALESCE(v.value, 0)
+		        COALESCE(v.value, 0),
+		        COALESCE(a.published_at, a.fetched_at, di.rowid)
 		 FROM digest_items di
 		 LEFT JOIN votes v ON v.digest_item_id = di.id AND v.user_id = ?
+		 LEFT JOIN articles a ON a.id = di.article_id
 		 WHERE di.digest_id = ?
 		 ORDER BY di.position`,
 		userID, d.ID,
@@ -227,12 +229,17 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 	for rows.Next() {
 		var it itemView
 		var bulletsJSON string
+		var publishedAt sql.NullTime
 		rows.Scan(&it.ID, &it.Position, &it.Priority, &it.Category, &it.Headline, &it.TLDR, &bulletsJSON,
 			&it.SourceName, &it.SourceURL, &it.ImageURL, &it.ReadTime, &it.Language, &it.Importance,
-			&it.UserVote)
+			&it.UserVote, &publishedAt)
 		json.Unmarshal([]byte(bulletsJSON), &it.Bullets)
 		it.ItemID = it.ID
-		it.TimeAgo = timeAgo(d.GeneratedAt)
+		if publishedAt.Valid {
+			it.TimeAgo = timeAgo(publishedAt.Time)
+		} else {
+			it.TimeAgo = timeAgo(d.GeneratedAt)
+		}
 		items = append(items, it)
 	}
 
