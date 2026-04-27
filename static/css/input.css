@@ -261,7 +261,7 @@
   }
 
   .section-wire-headline {
-    @apply text-sm leading-snug;
+    @apply text-base leading-snug;
   }
 
   @media (prefers-color-scheme: dark) {
