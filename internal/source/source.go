@@ -51,7 +51,9 @@ func (r *Registry) FetchAllForUser(ctx context.Context, userID int64) (int, int,
 	var sources []models.Source
 	for rows.Next() {
 		var s models.Source
-		rows.Scan(&s.ID, &s.UserID, &s.Type, &s.Name, &s.URL, &s.Config, &s.Enabled)
+		var cfgStr string
+		rows.Scan(&s.ID, &s.UserID, &s.Type, &s.Name, &s.URL, &cfgStr, &s.Enabled)
+		s.Config = []byte(cfgStr)
 		sources = append(sources, s)
 	}
 

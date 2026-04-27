@@ -37,8 +37,15 @@ func (p *FreshRSSProvider) Validate(cfg json.RawMessage) error {
 
 func (p *FreshRSSProvider) Fetch(ctx context.Context, src models.Source) ([]models.Article, error) {
 	var cfg FreshRSSConfig
+	if len(src.Config) == 0 {
+		return nil, fmt.Errorf("freshrss config is empty for source %d", src.ID)
+	}
 	if err := json.Unmarshal(src.Config, &cfg); err != nil {
-		return nil, err
+		log.Printf("freshrss: failed to parse config for source %d: %s (raw: %s)", src.ID, err, truncate(src.Config, 200))
+		return nil, fmt.Errorf("invalid freshrss config: %w", err)
+	}
+	if cfg.Username == "" || cfg.APIPassword == "" {
+		return nil, fmt.Errorf("freshrss config missing username or api_password for source %d", src.ID)
 	}
 
 	client := &freshRSSClient{
