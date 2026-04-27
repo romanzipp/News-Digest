@@ -223,7 +223,7 @@ body {
 }
 
 /* Remove bottom border from last row in 3-col brief grid */
-.brief-grid > article:nth-last-child(-n+3) {
+.brief-grid > :nth-last-child(-n+3) {
   border-bottom: none;
   padding-bottom: 0;
 }
