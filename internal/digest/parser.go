@@ -3,6 +3,7 @@ package digest
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -59,6 +60,11 @@ func parseResponse(raw string) (*DigestResponse, error) {
 	cleaned := extractJSON(raw)
 	var resp DigestResponse
 	if err := json.Unmarshal([]byte(cleaned), &resp); err != nil {
+		tail := cleaned
+		if len(tail) > 200 {
+			tail = cleaned[len(cleaned)-200:]
+		}
+		log.Printf("ai json parse failed: len=%d tail=%s", len(cleaned), tail)
 		return nil, fmt.Errorf("parse AI response: %w", err)
 	}
 	return &resp, nil

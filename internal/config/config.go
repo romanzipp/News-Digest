@@ -35,7 +35,7 @@ func Load() *Config {
 		AIEndpoint:          envOr("AI_ENDPOINT", "https://api.openai.com/v1"),
 		AIAPIKey:            os.Getenv("AI_API_KEY"),
 		AIModel:             envOr("AI_MODEL", "gpt-4o"),
-		AIMaxTokens:         envInt("AI_MAX_TOKENS", 4096),
+		AIMaxTokens:         envInt("AI_MAX_TOKENS", 16384),
 		AIMaxContext:         envInt("AI_MAX_CONTEXT", 128000),
 		FetchCron:           envOr("FETCH_CRON", "0 5 * * *"),
 		DigestCron:          envOr("DIGEST_CRON", "0 6 * * *"),
