@@ -1,18 +1,20 @@
 {{define "colophon"}}
-<footer class="px-12 py-6 text-xs text-muted grid grid-cols-2 gap-4">
-    <div>
-        <div class="uppercase tracking-wider mb-1.5 text-ink font-semibold">Preferences note</div>
-        <div class="italic leading-relaxed">
-            {{if .PreferenceSummary}}
-            Ranking tuned from your taste prompt: <span class="text-ink">"{{.PreferenceSummary}}"</span>
-            {{else}}
-            No preferences configured yet. <a href="/interests" class="underline">Set up your interests</a>
-            {{end}}
+<footer>
+    <div class="content-container py-6 text-xs text-muted grid grid-cols-2 gap-4">
+        <div>
+            <div class="uppercase tracking-wider mb-1.5 text-ink font-semibold">Preferences note</div>
+            <div class="italic leading-relaxed">
+                {{if .PreferenceSummary}}
+                Ranking tuned from your taste prompt: <span class="text-ink">"{{.PreferenceSummary}}"</span>
+                {{else}}
+                No preferences configured yet. <a href="/interests" class="underline">Set up your interests</a>
+                {{end}}
+            </div>
         </div>
-    </div>
-    <div>
-        <div class="uppercase tracking-wider mb-1.5 text-ink font-semibold">Feeds on the roster</div>
-        <div class="leading-relaxed">{{.FeedNames}}</div>
+        <div>
+            <div class="uppercase tracking-wider mb-1.5 text-ink font-semibold">Feeds on the roster</div>
+            <div class="leading-relaxed">{{.FeedNames}}</div>
+        </div>
     </div>
 </footer>
 {{end}}

@@ -1,13 +1,15 @@
 {{define "trending"}}
-<div class="px-12 py-4 double-rule bg-ink text-cream">
-    <div class="text-[11px] uppercase tracking-[2px] mb-2 opacity-70">Clusters trending across your feeds</div>
-    <div class="flex gap-6 flex-wrap text-sm">
-        {{range .Trending}}
-        <span>
-            <span class="font-semibold">{{.Topic}}</span>
-            <span class="opacity-60 ml-1.5">{{.Count}}·{{.Delta}}</span>
-        </span>
-        {{end}}
+<div class="double-rule bg-ink text-cream">
+    <div class="content-container py-4">
+        <div class="text-[11px] uppercase tracking-[2px] mb-2 opacity-70">Clusters trending across your feeds</div>
+        <div class="flex gap-6 flex-wrap text-sm">
+            {{range .Trending}}
+            <span>
+                <span class="font-semibold">{{.Topic}}</span>
+                <span class="opacity-60 ml-1.5">{{.Count}}·{{.Delta}}</span>
+            </span>
+            {{end}}
+        </div>
     </div>
 </div>
 {{end}}

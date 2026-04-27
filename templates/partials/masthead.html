@@ -1,13 +1,15 @@
 {{define "masthead"}}
-<header class="px-12 pt-7 pb-4 double-rule">
-    <div class="flex justify-between items-baseline mb-3 text-[11px] uppercase tracking-wider text-muted">
-        <span>{{if .User}}{{.User.Username}}{{else}}Guest{{end}}</span>
-        <span>{{.DateFormatted}}</span>
-        <span>Est. 2024 · Self-hosted</span>
-    </div>
-    <a href="/" class="masthead-title block no-underline" style="text-decoration:none;color:inherit">The Daily Digest</a>
-    <div class="text-center italic text-[13px] mt-2 text-muted">
-        "All the news worth summarising"{{if .DigestMeta}} · {{.DigestMeta.FeedsCount}} feeds · {{.DigestMeta.ArticlesReviewed}} stories reviewed · {{.DigestMeta.ArticlesSurfaced}} surfaced{{end}}
+<header class="double-rule">
+    <div class="content-container pt-7 pb-4">
+        <div class="flex justify-between items-baseline mb-3 text-[11px] uppercase tracking-wider text-muted">
+            <span>{{if .User}}{{.User.Username}}{{else}}Guest{{end}}</span>
+            <span>{{.DateFormatted}}</span>
+            <span>Est. 2024 · Self-hosted</span>
+        </div>
+        <a href="/" class="masthead-title block no-underline" style="text-decoration:none;color:inherit">The Daily Digest</a>
+        <div class="text-center italic text-[13px] mt-2 text-muted">
+            "All the news worth summarising"{{if .DigestMeta}} · {{.DigestMeta.FeedsCount}} feeds · {{.DigestMeta.ArticlesReviewed}} stories reviewed · {{.DigestMeta.ArticlesSurfaced}} surfaced{{end}}
+        </div>
     </div>
 </header>
 {{end}}

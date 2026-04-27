@@ -64,6 +64,10 @@
 }
 
 @layer components {
+  .content-container {
+    @apply max-w-6xl mx-auto px-12;
+  }
+
   .masthead-title {
     font-family: var(--font-masthead);
     @apply text-7xl font-black text-center tracking-tighter leading-none;
