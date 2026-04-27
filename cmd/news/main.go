@@ -109,6 +109,7 @@ func main() {
 
 	mux.Handle("GET /sections", authMw.RequireAuth(http.HandlerFunc(sectionsH.SectionsPage)))
 	mux.Handle("POST /sections", authMw.RequireAuth(http.HandlerFunc(sectionsH.SectionAdd)))
+	mux.Handle("POST /sections/{id}/update", authMw.RequireAuth(http.HandlerFunc(sectionsH.SectionUpdate)))
 	mux.Handle("POST /sections/{id}/delete", authMw.RequireAuth(http.HandlerFunc(sectionsH.SectionDelete)))
 
 	mux.Handle("POST /votes", authMw.RequireAuth(http.HandlerFunc(votesH.Vote)))

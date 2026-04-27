@@ -53,6 +53,17 @@ func (h *SectionsHandler) SectionAdd(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/sections", http.StatusSeeOther)
 }
 
+func (h *SectionsHandler) SectionUpdate(w http.ResponseWriter, r *http.Request) {
+	user := auth.UserFromContext(r.Context())
+	id := r.PathValue("id")
+	title := r.FormValue("title")
+	prompt := r.FormValue("prompt")
+
+	h.db.Exec("UPDATE custom_sections SET title = ?, prompt = ? WHERE id = ? AND user_id = ?", title, prompt, id, user.ID)
+	h.sessions.Put(r.Context(), "flash", "Section updated.")
+	http.Redirect(w, r, "/sections", http.StatusSeeOther)
+}
+
 func (h *SectionsHandler) SectionDelete(w http.ResponseWriter, r *http.Request) {
 	user := auth.UserFromContext(r.Context())
 	id := r.PathValue("id")

@@ -7,15 +7,20 @@
     {{if .Sections}}
     <div class="mb-6 space-y-3">
         {{range .Sections}}
-        <div class="card flex justify-between items-start gap-4">
-            <div>
-                <h3 class="font-bold">{{.Title}}</h3>
-                <p class="text-sm text-muted italic mt-1">{{.Prompt}}</p>
+        <form method="POST" action="/sections/{{.ID}}/update" class="card">
+            <div class="mb-3">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-1">Title</label>
+                <input type="text" name="title" value="{{.Title}}" required class="form-input">
             </div>
-            <form method="POST" action="/sections/{{.ID}}/delete">
-                <button type="submit" class="vote-btn">Remove</button>
-            </form>
-        </div>
+            <div class="mb-3">
+                <label class="block text-xs uppercase tracking-wider text-muted mb-1">Prompt</label>
+                <textarea name="prompt" rows="2" required class="form-input">{{.Prompt}}</textarea>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" formaction="/sections/{{.ID}}/delete" class="btn">Remove</button>
+            </div>
+        </form>
         {{end}}
     </div>
     {{end}}
