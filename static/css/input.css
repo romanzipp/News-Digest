@@ -100,7 +100,7 @@
 
   .lead-headline {
     font-family: var(--font-masthead);
-    @apply text-2xl sm:text-[32px] lg:text-[42px] font-black leading-[1.05] mt-2 mb-4;
+    @apply text-xl sm:text-[32px] lg:text-[42px] font-black leading-[1.05] mt-2 mb-4;
     letter-spacing: -0.8px;
   }
 
@@ -113,6 +113,13 @@
   .brief-headline {
     font-family: var(--font-masthead);
     @apply text-xl font-bold leading-[1.2] mt-1 mb-4;
+  }
+
+  @media (max-width: 639px) {
+    .article-desc {
+      font-size: 0.9375rem;
+      line-height: 1.4;
+    }
   }
 
   .tldr {
