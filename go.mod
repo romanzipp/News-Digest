@@ -1,11 +1,12 @@
 module git.romanzipp.net/romanzipp/news
 
-go 1.26.2
+go 1.25.0
 
 require (
 	github.com/alexedwards/scs/sqlite3store v0.0.0-20251002162104-209de6e426de
 	github.com/alexedwards/scs/v2 v2.9.0
 	github.com/anthropics/anthropic-sdk-go v1.38.0
+	github.com/invopop/jsonschema v0.13.0
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.12.3
 	github.com/mattn/go-sqlite3 v1.14.42
@@ -20,7 +21,6 @@ require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
-	github.com/invopop/jsonschema v0.13.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mmcdole/goxpp v1.1.1-0.20240225020742-a0c311522b23 // indirect
