@@ -100,7 +100,7 @@
 
   .lead-headline {
     font-family: var(--font-masthead);
-    @apply text-xl sm:text-[32px] lg:text-[42px] font-black leading-[1.05] mt-2 mb-4;
+    @apply text-xl sm:text-[32px] lg:text-[42px] font-bold sm:font-black leading-[1.05] mt-2 mb-4;
     letter-spacing: -0.8px;
   }
 
