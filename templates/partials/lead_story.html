@@ -2,7 +2,7 @@
 <article class="grid grid-cols-[1.3fr_1fr] gap-7">
     <div>
         {{template "category_slug" .}}
-        <h1 class="lead-headline">{{.Headline}}</h1>
+        <h1 class="lead-headline"><a href="{{.SourceURL}}" target="_blank" rel="noopener" class="hover:underline" style="text-decoration:none;color:inherit">{{.Headline}}</a></h1>
         <div class="tldr mb-4">{{.TLDR}}</div>
         {{if .Bullets}}
         <ul class="story-bullets mb-4">

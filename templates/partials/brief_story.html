@@ -1,7 +1,7 @@
 {{define "brief_story"}}
 <article class="pb-4 dotted-rule">
     {{template "category_slug" .}}
-    <h3 class="brief-headline">{{.Headline}}</h3>
+    <h3 class="brief-headline"><a href="{{.SourceURL}}" target="_blank" rel="noopener" class="hover:underline" style="text-decoration:none;color:inherit">{{.Headline}}</a></h3>
     <div class="text-[13px] leading-normal mb-2" style="color: var(--color-ink-soft)">{{.TLDR}}</div>
     {{template "byline" .}}
 </article>
