@@ -1,7 +1,6 @@
 package digest
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -57,51 +56,14 @@ func buildSystemPrompt(interests []models.Interest, votes []voteRecord, sections
 		b.WriteString("\n")
 	}
 
-	b.WriteString(`## Output Format
-Respond with valid JSON in this exact structure:
-{
-  "items": [
-    {
-      "article_guid": "the guid from the input",
-      "headline": "rewritten headline",
-      "tldr": "one paragraph summary in the article's original language",
-      "bullets": ["key point 1", "key point 2", "key point 3"],
-      "category": "one of the categories above",
-      "priority": 9,
-      "importance": "high",
-      "read_time": 3,
-      "language": "en",
-      "source_name": "Source Name",
-      "source_url": "https://...",
-      "image_url": "https://... or empty string"
-    }
-  ],
-  "sections": [
-    {
-      "section_id": 1,
-      "items": [
-        {
-          "article_guid": "...",
-          "headline": "short single-line summary of the item",
-          "severity": "high",
-          "indicator": "CVE-2026-1234 or AAPL or short identifier",
-          "published_at": "2026-04-27T08:00:00Z",
-          "source_name": "...",
-          "source_url": "...",
-          "language": "..."
-        }
-      ]
-    }
-  ],
-  "meta": {
-    "articles_reviewed": 98,
-    "articles_surfaced": 12,
-    "estimated_read_minutes": 14
-  }
-}
+	b.WriteString(`## Output
+Respond as JSON with keys: "items" (array of articles), "sections" (array of section results), "meta" (object with articles_reviewed, articles_surfaced, estimated_read_minutes).
+Each item: article_guid, headline, tldr, bullets[], category, priority (1-10), importance (high/medium/low), read_time, language, source_name, source_url, image_url.
+Each section: section_id, items[] with article_guid, headline, severity (high/med/low), indicator, published_at, source_name, source_url, language.
 
+## Instructions
 Select at most 20 articles for the main items. Order by priority descending.
-For each category you use, try to include at least 2 articles. You don't need to cover every category — only use categories that have relevant articles.
+Only include categories that naturally fit the available articles. Do NOT force articles into categories just to have coverage — quality over breadth. If a category has relevant articles, aim for at least 2.
 
 For section items:
 - "headline" is a single short summary line (no separate description)
@@ -113,44 +75,39 @@ For section items:
 	return b.String()
 }
 
-type articleInput struct {
-	ID        int    `json:"id"`
-	GUID      string `json:"guid"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
-	Source    string `json:"source"`
-	URL       string `json:"url"`
-	Published string `json:"published"`
-	Language  string `json:"language"`
-	ImageURL  string `json:"image_url"`
-}
-
 func buildArticlePrompt(articles []models.Article) string {
-	inputs := make([]articleInput, len(articles))
+	var b strings.Builder
+	b.WriteString("Here are the articles to review:\n\n")
+
 	for i, a := range articles {
-		published := ""
-		if a.PublishedAt.Valid {
-			published = a.PublishedAt.Time.Format("2006-01-02T15:04:05Z")
-		}
 		content := a.Content
 		if len(content) > 2000 {
 			content = content[:2000] + "..."
 		}
-		inputs[i] = articleInput{
-			ID:        i + 1,
-			GUID:      a.GUID,
-			Title:     a.Title,
-			Content:   content,
-			Source:     a.Author,
-			URL:       a.URL,
-			Published: published,
-			Language:  a.Language,
-			ImageURL:  a.ImageURL,
+
+		b.WriteString(fmt.Sprintf("--- Article #%d ---\n", i+1))
+		b.WriteString(fmt.Sprintf("GUID: %s\n", a.GUID))
+		b.WriteString(fmt.Sprintf("Title: %s\n", a.Title))
+		if a.Author != "" {
+			b.WriteString(fmt.Sprintf("Source: %s\n", a.Author))
 		}
+		b.WriteString(fmt.Sprintf("URL: %s\n", a.URL))
+		if a.PublishedAt.Valid {
+			b.WriteString(fmt.Sprintf("Published: %s\n", a.PublishedAt.Time.Format("2006-01-02T15:04:05Z")))
+		}
+		if a.Language != "" {
+			b.WriteString(fmt.Sprintf("Language: %s\n", a.Language))
+		}
+		if a.ImageURL != "" {
+			b.WriteString(fmt.Sprintf("Image: %s\n", a.ImageURL))
+		}
+		if content != "" {
+			b.WriteString(fmt.Sprintf("Content: %s\n", content))
+		}
+		b.WriteString("\n")
 	}
 
-	data, _ := json.Marshal(inputs)
-	return fmt.Sprintf("Here are the articles to review:\n\n%s", string(data))
+	return b.String()
 }
 
 func estimateTokens(text string) int {
@@ -158,7 +115,7 @@ func estimateTokens(text string) int {
 }
 
 func splitIntoBatches(articles []models.Article, maxTokens int, systemPromptTokens int) [][]models.Article {
-	available := maxTokens - systemPromptTokens - 1000 // reserve for output
+	available := maxTokens - systemPromptTokens - 1000
 	if available <= 0 {
 		available = maxTokens / 2
 	}

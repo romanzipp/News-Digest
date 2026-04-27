@@ -2,6 +2,7 @@ package ai
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/anthropics/anthropic-sdk-go"
@@ -13,6 +14,7 @@ type anthropicClient struct {
 	client    anthropic.Client
 	model     string
 	maxTokens int
+	schema    anthropic.ToolInputSchemaParam
 }
 
 func newAnthropicClient(cfg *config.Config) *anthropicClient {
@@ -27,6 +29,7 @@ func newAnthropicClient(cfg *config.Config) *anthropicClient {
 		client:    anthropic.NewClient(opts...),
 		model:     cfg.AIModel,
 		maxTokens: cfg.AIMaxTokens,
+		schema:    generateDigestSchema(),
 	}
 }
 
@@ -42,6 +45,18 @@ func (c *anthropicClient) Complete(ctx context.Context, systemPrompt, userPrompt
 				anthropic.NewTextBlock(userPrompt),
 			),
 		},
+		Tools: []anthropic.ToolUnionParam{
+			{OfTool: &anthropic.ToolParam{
+				Name:        "publish_digest",
+				Description: anthropic.String("Publish the curated news digest"),
+				InputSchema: c.schema,
+			}},
+		},
+		ToolChoice: anthropic.ToolChoiceUnionParam{
+			OfTool: &anthropic.ToolChoiceToolParam{
+				Name: "publish_digest",
+			},
+		},
 	})
 	if err != nil {
 		return "", fmt.Errorf("anthropic completion: %w", err)
@@ -52,10 +67,14 @@ func (c *anthropicClient) Complete(ctx context.Context, systemPrompt, userPrompt
 	}
 
 	for _, block := range msg.Content {
-		if block.Type == "text" {
-			return block.Text, nil
+		if block.Type == "tool_use" {
+			raw, err := json.Marshal(block.Input)
+			if err != nil {
+				return "", fmt.Errorf("anthropic: marshal tool input: %w", err)
+			}
+			return string(raw), nil
 		}
 	}
 
-	return "", fmt.Errorf("anthropic: no text content in response")
+	return "", fmt.Errorf("anthropic: no tool_use block in response")
 }
