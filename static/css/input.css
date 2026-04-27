@@ -186,7 +186,8 @@
     transition: background-color 0.1s ease;
   }
 
-  .article-link.is-read {
+  .article-link.is-read,
+  tr.is-read {
     opacity: 0.4;
   }
 

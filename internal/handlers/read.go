@@ -19,17 +19,26 @@ func NewReadHandler(db *sql.DB) *ReadHandler {
 func (h *ReadHandler) MarkAndRedirect(w http.ResponseWriter, r *http.Request) {
 	user := auth.UserFromContext(r.Context())
 	itemID := r.PathValue("id")
+	itemType := r.URL.Query().Get("type")
 
 	var id int64
 	fmt.Sscan(itemID, &id)
 
-	h.db.Exec(
-		"INSERT INTO read_items (user_id, digest_item_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
-		user.ID, id,
-	)
-
+	var articleID sql.NullInt64
 	var sourceURL string
-	h.db.QueryRow("SELECT source_url FROM digest_items WHERE id = ?", id).Scan(&sourceURL)
+
+	if itemType == "section" {
+		h.db.QueryRow("SELECT article_id, source_url FROM section_items WHERE id = ?", id).Scan(&articleID, &sourceURL)
+	} else {
+		h.db.QueryRow("SELECT article_id, source_url FROM digest_items WHERE id = ?", id).Scan(&articleID, &sourceURL)
+	}
+
+	if articleID.Valid {
+		h.db.Exec(
+			"INSERT INTO read_items (user_id, article_id) VALUES (?, ?) ON CONFLICT DO NOTHING",
+			user.ID, articleID.Int64,
+		)
+	}
 
 	if sourceURL == "" {
 		sourceURL = "/"

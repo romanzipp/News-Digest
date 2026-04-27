@@ -133,13 +133,15 @@ func sqliteMigrations() []string {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)`,
+		`ALTER TABLE read_items RENAME TO read_items_old`,
 		`CREATE TABLE IF NOT EXISTS read_items (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-			digest_item_id INTEGER NOT NULL REFERENCES digest_items(id) ON DELETE CASCADE,
+			article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			UNIQUE(user_id, digest_item_id)
+			UNIQUE(user_id, article_id)
 		)`,
+		`DROP TABLE IF EXISTS read_items_old`,
 	}
 }
 
@@ -271,9 +273,9 @@ func postgresMigrations() []string {
 		`CREATE TABLE IF NOT EXISTS read_items (
 			id BIGSERIAL PRIMARY KEY,
 			user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-			digest_item_id BIGINT NOT NULL REFERENCES digest_items(id) ON DELETE CASCADE,
+			article_id BIGINT NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
 			created_at TIMESTAMPTZ DEFAULT NOW(),
-			UNIQUE(user_id, digest_item_id)
+			UNIQUE(user_id, article_id)
 		)`,
 	}
 }

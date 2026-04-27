@@ -65,11 +65,11 @@
             </div>
             <table class="section-wire-table">
                 {{range .Items}}
-                <tr>
+                <tr class="{{if .IsRead}}is-read{{end}}">
                     <td class="section-wire-time">{{.TimeFormatted}}</td>
                     <td class="section-wire-sev-cell"><span class="section-severity section-severity-{{.Severity}}"></span></td>
                     <td class="section-wire-indicator">{{.Indicator}}</td>
-                    <td><a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-headline">{{.Headline}}</a></td>
+                    <td><a href="/read/{{.ID}}?type=section" target="_blank" rel="noopener" class="section-wire-headline">{{.Headline}}</a></td>
                 </tr>
                 {{end}}
             </table>

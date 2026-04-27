@@ -159,7 +159,7 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	data["TopItems"] = top
 	data["RestItems"] = rest
 	data["GroupedRest"] = groupByCategory(rest)
-	data["Sections"] = h.loadSections(dg.ID)
+	data["Sections"] = h.loadSections(dg.ID, user.ID)
 
 	h.tmpl.Render(w, "home", data)
 }
@@ -229,7 +229,7 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 		 FROM digest_items di
 		 LEFT JOIN votes v ON v.digest_item_id = di.id AND v.user_id = ?
 		 LEFT JOIN articles a ON a.id = di.article_id
-		 LEFT JOIN read_items ri ON ri.digest_item_id = di.id AND ri.user_id = ?
+		 LEFT JOIN read_items ri ON ri.article_id = di.article_id AND ri.user_id = ?
 		 WHERE di.digest_id = ?
 		 ORDER BY di.position`,
 		userID, userID, d.ID,
@@ -380,6 +380,7 @@ type digestSectionView struct {
 }
 
 type sectionItemView struct {
+	ID            int64
 	Headline      string
 	SourceName    string
 	SourceURL     string
@@ -388,16 +389,19 @@ type sectionItemView struct {
 	Indicator     string
 	PublishedAt   string
 	TimeFormatted string
+	IsRead        bool
 }
 
-func (h *HomeHandler) loadSections(digestID int64) []digestSectionView {
+func (h *HomeHandler) loadSections(digestID, userID int64) []digestSectionView {
 	rows, err := h.db.Query(
-		`SELECT cs.title, si.headline, si.source_name, si.source_url, si.language, si.severity, si.indicator, si.published_at
+		`SELECT cs.title, si.id, si.headline, si.source_name, si.source_url, si.language, si.severity, si.indicator, si.published_at,
+		        CASE WHEN ri.id IS NOT NULL THEN 1 ELSE 0 END
 		 FROM section_items si
 		 JOIN custom_sections cs ON cs.id = si.section_id
+		 LEFT JOIN read_items ri ON ri.article_id = si.article_id AND ri.user_id = ?
 		 WHERE si.digest_id = ?
 		 ORDER BY cs.position, si.position`,
-		digestID,
+		userID, digestID,
 	)
 	if err != nil {
 		return nil
@@ -409,7 +413,7 @@ func (h *HomeHandler) loadSections(digestID int64) []digestSectionView {
 	for rows.Next() {
 		var title string
 		var item sectionItemView
-		rows.Scan(&title, &item.Headline, &item.SourceName, &item.SourceURL, &item.Language, &item.Severity, &item.Indicator, &item.PublishedAt)
+		rows.Scan(&title, &item.ID, &item.Headline, &item.SourceName, &item.SourceURL, &item.Language, &item.Severity, &item.Indicator, &item.PublishedAt, &item.IsRead)
 		item.TimeFormatted = formatSectionTime(item.PublishedAt)
 
 		if _, ok := sectionMap[title]; !ok {
