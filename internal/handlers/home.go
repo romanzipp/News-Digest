@@ -212,7 +212,7 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 		`SELECT di.id, di.position, di.priority, di.category, di.headline, di.tldr, di.bullets,
 		        di.source_name, di.source_url, di.image_url, di.read_time, di.language, di.importance,
 		        COALESCE(v.value, 0),
-		        COALESCE(a.published_at, a.fetched_at, di.rowid)
+		        a.published_at
 		 FROM digest_items di
 		 LEFT JOIN votes v ON v.digest_item_id = di.id AND v.user_id = ?
 		 LEFT JOIN articles a ON a.id = di.article_id
@@ -229,14 +229,22 @@ func (h *HomeHandler) loadDigest(userID int64, date string, specificID int64) (*
 	for rows.Next() {
 		var it itemView
 		var bulletsJSON string
-		var publishedAt sql.NullTime
+		var publishedAt sql.NullString
 		rows.Scan(&it.ID, &it.Position, &it.Priority, &it.Category, &it.Headline, &it.TLDR, &bulletsJSON,
 			&it.SourceName, &it.SourceURL, &it.ImageURL, &it.ReadTime, &it.Language, &it.Importance,
 			&it.UserVote, &publishedAt)
 		json.Unmarshal([]byte(bulletsJSON), &it.Bullets)
 		it.ItemID = it.ID
 		if publishedAt.Valid {
-			it.TimeAgo = timeAgo(publishedAt.Time)
+			if t, err := time.Parse(time.RFC3339, publishedAt.String); err == nil {
+				it.TimeAgo = timeAgo(t)
+			} else if t, err := time.Parse("2006-01-02T15:04:05Z", publishedAt.String); err == nil {
+				it.TimeAgo = timeAgo(t)
+			} else if t, err := time.Parse("2006-01-02 15:04:05", publishedAt.String); err == nil {
+				it.TimeAgo = timeAgo(t)
+			} else {
+				it.TimeAgo = timeAgo(d.GeneratedAt)
+			}
 		} else {
 			it.TimeAgo = timeAgo(d.GeneratedAt)
 		}
