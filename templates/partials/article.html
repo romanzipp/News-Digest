@@ -15,7 +15,7 @@
     <img src="{{proxyURL .ImageURL}}" alt="" class="w-full {{if eq .Size "secondary"}}h-[120px]{{else}}h-[100px]{{end}} object-cover rounded-sm {{if eq .Size "secondary"}}mb-0{{else}}mb-3{{end}}">
     {{end}}
 
-    <div class="article-desc {{if eq .Size "lead"}}text-base sm:text-lg leading-snug mb-4{{else if eq .Size "secondary"}}text-base leading-snug sm:leading-relaxed mt-3 mb-3{{else}}text-base leading-snug mb-3{{end}}">{{.TLDR}}</div>
+    <div class="article-desc {{if eq .Size "lead"}}text-[15px] sm:text-lg leading-snug mb-4{{else if eq .Size "secondary"}}text-[15px] leading-snug sm:leading-relaxed mt-3 mb-3{{else}}text-[15px] leading-snug mb-3{{end}}">{{.TLDR}}</div>
 
     {{if and (ne .Size "brief") .Bullets}}
     <ul class="story-bullets {{if eq .Size "secondary"}}text-[13px] mb-2.5{{else}}mb-4{{end}}">
