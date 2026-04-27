@@ -210,24 +210,41 @@
     break-inside: avoid;
   }
 
-  .section-card {
-    @apply block p-4 border-l-[3px] border-ink rounded-sm;
-    background: rgba(0, 0, 0, 0.02);
+  .section-header {
+    @apply text-center mb-4;
+  }
+
+  .section-header-label {
+    @apply inline-block px-4 text-sm uppercase tracking-[3px] font-bold;
+    font-family: var(--font-masthead);
+  }
+
+  .section-wire-item {
+    @apply block py-3 border-t border-rule;
     text-decoration: none;
     color: inherit;
     transition: background-color 0.1s ease;
   }
 
-  .section-card:hover {
-    background: rgba(0, 0, 0, 0.05);
+  .section-wire-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .section-wire-headline {
+    @apply block text-sm font-bold leading-snug mb-1;
+  }
+
+  .section-wire-desc {
+    @apply block text-xs leading-snug text-muted;
+  }
+
+  .section-wire-source {
+    @apply block text-[10px] uppercase tracking-wider text-rule-light mt-1.5;
   }
 
   @media (prefers-color-scheme: dark) {
-    .section-card {
+    .section-wire-item:hover {
       background: rgba(255, 255, 255, 0.03);
-    }
-    .section-card:hover {
-      background: rgba(255, 255, 255, 0.06);
     }
   }
 

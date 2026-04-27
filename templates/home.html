@@ -58,15 +58,17 @@
     {{end}}
 
     {{range .Sections}}
-    <div class="single-rule">
-        <div class="max-w-[90rem] mx-auto px-12 pt-6 pb-4">
-            <div class="text-sm uppercase tracking-[2px] font-bold mb-4 text-ink">{{.Title}}</div>
-            <div class="grid grid-cols-4 gap-4">
+    <div class="double-rule">
+        <div class="content-container pt-5 pb-4">
+            <div class="section-header">
+                <span class="section-header-label">{{.Title}}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-x-12">
                 {{range .Items}}
-                <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-card">
-                    <div class="text-sm font-bold leading-snug mb-2" style="font-family: var(--font-masthead)">{{.Headline}}</div>
-                    <div class="text-xs leading-snug text-muted mb-2">{{.TLDR}}</div>
-                    <div class="text-[10px] uppercase tracking-wider text-rule-light">{{.SourceName}}</div>
+                <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-item">
+                    <span class="section-wire-headline">{{.Headline}}</span>
+                    <span class="section-wire-desc">{{.TLDR}}</span>
+                    <span class="section-wire-source">{{.SourceName}}</span>
                 </a>
                 {{end}}
             </div>
