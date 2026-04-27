@@ -63,18 +63,16 @@
             <div class="section-header">
                 <span class="section-header-label">{{.Title}}</span>
             </div>
-            <div>
+            <table class="section-wire-table">
                 {{range .Items}}
-                <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-item">
-                    <span class="section-wire-meta">
-                        {{if .TimeFormatted}}<span class="section-wire-time">{{.TimeFormatted}}</span>{{end}}
-                        <span class="section-severity section-severity-{{.Severity}}"></span>
-                        {{if .Indicator}}<span class="section-wire-indicator">{{.Indicator}}</span>{{end}}
-                    </span>
-                    <span class="section-wire-headline">{{.Headline}}</span>
-                </a>
+                <tr>
+                    <td class="section-wire-time">{{.TimeFormatted}}</td>
+                    <td class="section-wire-sev-cell"><span class="section-severity section-severity-{{.Severity}}"></span></td>
+                    <td class="section-wire-indicator">{{.Indicator}}</td>
+                    <td><a href="{{.SourceURL}}" target="_blank" rel="noopener" class="section-wire-headline">{{.Headline}}</a></td>
+                </tr>
                 {{end}}
-            </div>
+            </table>
         </div>
     </div>
     <div class="h-20"></div>

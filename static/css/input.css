@@ -219,19 +219,27 @@
     font-family: var(--font-masthead);
   }
 
-  .section-wire-item {
-    @apply flex items-baseline gap-3 py-2.5 border-t border-rule;
-    text-decoration: none;
-    color: inherit;
+  .section-wire-table {
+    @apply w-full border-collapse;
+  }
+
+  .section-wire-table tr {
+    @apply border-t border-rule;
     transition: background-color 0.1s ease;
   }
 
-  .section-wire-item:hover {
+  .section-wire-table tr:hover {
     background: rgba(0, 0, 0, 0.02);
   }
 
-  .section-wire-meta {
-    @apply flex items-center gap-3 shrink-0;
+  .section-wire-table td {
+    @apply py-2.5 pr-4 align-middle;
+    white-space: nowrap;
+  }
+
+  .section-wire-table td:last-child {
+    @apply pr-0 w-full;
+    white-space: normal;
   }
 
   .section-wire-time {
@@ -239,8 +247,12 @@
     font-family: ui-monospace, Menlo, monospace;
   }
 
+  .section-wire-sev-cell {
+    @apply px-1;
+  }
+
   .section-severity {
-    @apply w-2.5 h-2.5 rounded-full shrink-0;
+    @apply w-2.5 h-2.5 rounded-full inline-block;
   }
 
   .section-severity-high {
@@ -262,10 +274,16 @@
 
   .section-wire-headline {
     @apply text-base leading-snug;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .section-wire-headline:hover {
+    @apply underline;
   }
 
   @media (prefers-color-scheme: dark) {
-    .section-wire-item:hover {
+    .section-wire-table tr:hover {
       background: rgba(255, 255, 255, 0.03);
     }
   }
