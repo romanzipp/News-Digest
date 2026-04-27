@@ -1,6 +1,9 @@
 {{define "brief_story"}}
 <a href="{{.SourceURL}}" target="_blank" rel="noopener" class="article-link block pb-4 border-b border-dotted border-rule-light">
     <h3 class="brief-headline">{{.Headline}}</h3>
+    {{if .ImageURL}}
+    <img src="{{proxyURL .ImageURL}}" alt="" class="w-full h-[100px] object-cover rounded-sm mb-3">
+    {{end}}
     <div class="text-base leading-snug mb-3 article-desc">{{.TLDR}}</div>
     {{template "byline" .}}
 </a>
