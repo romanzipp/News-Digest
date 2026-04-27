@@ -119,7 +119,7 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	activeJob, _ := h.generator.ActiveJobForUser(user.ID)
 
 	data := map[string]any{
-		"Title":             fmt.Sprintf("Digest — %s", date),
+		"Title":             "",
 		"User":              user,
 		"Date":              date,
 		"DateFormatted":     formatDateLong(date),
@@ -177,7 +177,7 @@ func (h *HomeHandler) renderEmpty(w http.ResponseWriter, r *http.Request, user *
 	activeJob, _ := h.generator.ActiveJobForUser(user.ID)
 
 	h.tmpl.Render(w, "home", map[string]any{
-		"Title":         fmt.Sprintf("Digest — %s", date),
+		"Title":         "",
 		"User":          user,
 		"Date":          date,
 		"DateFormatted": formatDateLong(date),
