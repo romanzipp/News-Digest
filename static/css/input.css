@@ -188,7 +188,7 @@
 
   .article-link:visited,
   .article-link:visited * {
-    color: var(--color-rule);
+    color: #a89a8a;
   }
 
   .article-link:hover {
