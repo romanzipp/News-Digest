@@ -45,5 +45,9 @@ func (c *openAIClient) Complete(ctx context.Context, systemPrompt, userPrompt st
 		return "", fmt.Errorf("openai: no choices returned")
 	}
 
+	if resp.Choices[0].FinishReason == "length" {
+		return "", fmt.Errorf("openai: response truncated (hit max_tokens=%d), increase AI_MAX_TOKENS", c.maxTokens)
+	}
+
 	return resp.Choices[0].Message.Content, nil
 }

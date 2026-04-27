@@ -47,6 +47,10 @@ func (c *anthropicClient) Complete(ctx context.Context, systemPrompt, userPrompt
 		return "", fmt.Errorf("anthropic completion: %w", err)
 	}
 
+	if msg.StopReason == "max_tokens" {
+		return "", fmt.Errorf("anthropic: response truncated (hit max_tokens=%d), increase AI_MAX_TOKENS", c.maxTokens)
+	}
+
 	for _, block := range msg.Content {
 		if block.Type == "text" {
 			return block.Text, nil
