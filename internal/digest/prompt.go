@@ -99,6 +99,7 @@ Respond with valid JSON in this exact structure:
 }
 
 Select at most 20 articles for the main items. Order by priority descending.
+For section items, keep the tldr very short — 1-2 sentences maximum, like a brief alert.
 `)
 
 	return b.String()
