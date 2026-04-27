@@ -1,6 +1,12 @@
 {{define "content"}}
 {{template "masthead" .}}
 
+{{if .ActiveJob}}
+<a href="/digest/generating/{{.ActiveJob.ID}}" class="block px-12 py-3 text-sm border-b border-rule bg-ink text-cream no-underline">
+    Digest is being generated — {{.ActiveJob.Step}}
+</a>
+{{end}}
+
 {{if not .Empty}}
     {{template "digest_strip" .}}
     {{template "nav" .}}

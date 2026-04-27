@@ -59,7 +59,7 @@ func main() {
 
 	// Handlers
 	authH := handlers.NewAuthHandler(cfg, authSvc, sessions, tmpl)
-	homeH := handlers.NewHomeHandler(db, sessions, tmpl)
+	homeH := handlers.NewHomeHandler(db, sessions, tmpl, gen)
 	digestH := handlers.NewDigestHandler(sessions, tmpl, gen)
 	feedsH := handlers.NewFeedsHandler(db, sessions, tmpl, registry)
 	interestsH := handlers.NewInterestsHandler(db, sessions, tmpl)

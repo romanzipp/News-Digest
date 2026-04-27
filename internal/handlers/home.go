@@ -10,18 +10,20 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"git.romanzipp.net/romanzipp/news/internal/auth"
+	"git.romanzipp.net/romanzipp/news/internal/digest"
 	"git.romanzipp.net/romanzipp/news/internal/models"
 	"git.romanzipp.net/romanzipp/news/internal/templates"
 )
 
 type HomeHandler struct {
-	db       *sql.DB
-	sessions *scs.SessionManager
-	tmpl     *templates.Templates
+	db        *sql.DB
+	sessions  *scs.SessionManager
+	tmpl      *templates.Templates
+	generator *digest.Generator
 }
 
-func NewHomeHandler(db *sql.DB, sessions *scs.SessionManager, tmpl *templates.Templates) *HomeHandler {
-	return &HomeHandler{db: db, sessions: sessions, tmpl: tmpl}
+func NewHomeHandler(db *sql.DB, sessions *scs.SessionManager, tmpl *templates.Templates, generator *digest.Generator) *HomeHandler {
+	return &HomeHandler{db: db, sessions: sessions, tmpl: tmpl, generator: generator}
 }
 
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
@@ -94,7 +96,7 @@ type itemView struct {
 	TimeAgo    string
 }
 
-func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user *models.User, date string, digest *digestRow, items []itemView, allDigests []digestView) {
+func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user *models.User, date string, dg *digestRow, items []itemView, allDigests []digestView) {
 	flash, _ := h.sessions.Pop(r.Context(), "flash").(string)
 
 	prevDate := h.adjacentDate(user.ID, date, "prev")
@@ -108,9 +110,11 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	prefSummary := h.preferenceSummary(user.ID)
 
 	var trending []trendingView
-	if digest.RawResponse != "" {
-		trending = parseTrending(digest.RawResponse)
+	if dg.RawResponse != "" {
+		trending = parseTrending(dg.RawResponse)
 	}
+
+	activeJob, _ := h.generator.ActiveJobForUser(user.ID)
 
 	data := map[string]any{
 		"Title":             fmt.Sprintf("Digest — %s", date),
@@ -119,18 +123,19 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 		"DateFormatted":     formatDateLong(date),
 		"PrevDate":          prevDate,
 		"NextDate":          nextDate,
-		"Digest":            digest,
+		"Digest":            dg,
 		"Items":             items,
 		"AllDigests":        allDigests,
-		"ActiveDigestID":    digest.ID,
+		"ActiveDigestID":    dg.ID,
 		"Flash":             flash,
 		"Trending":          trending,
 		"FeedNames":         feedNames,
 		"PreferenceSummary": prefSummary,
+		"ActiveJob":         activeJob,
 		"DigestMeta": map[string]any{
-			"FeedsCount":       digest.FeedsCount,
-			"ArticlesReviewed": digest.ArticlesReviewed,
-			"ArticlesSurfaced": digest.ArticlesSurfaced,
+			"FeedsCount":       dg.FeedsCount,
+			"ArticlesReviewed": dg.ArticlesReviewed,
+			"ArticlesSurfaced": dg.ArticlesSurfaced,
 		},
 	}
 
@@ -156,6 +161,8 @@ func (h *HomeHandler) renderEmpty(w http.ResponseWriter, r *http.Request, user *
 		nextDate = today
 	}
 
+	activeJob, _ := h.generator.ActiveJobForUser(user.ID)
+
 	h.tmpl.Render(w, "home", map[string]any{
 		"Title":         fmt.Sprintf("Digest — %s", date),
 		"User":          user,
@@ -167,6 +174,7 @@ func (h *HomeHandler) renderEmpty(w http.ResponseWriter, r *http.Request, user *
 		"DigestMeta":    nil,
 		"FeedNames":     h.feedNames(user.ID),
 		"Flash":         flash,
+		"ActiveJob":     activeJob,
 	})
 }
 
