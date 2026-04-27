@@ -98,15 +98,18 @@ func (h *DigestHandler) GeneratingStatus(w http.ResponseWriter, r *http.Request)
 	today := time.Now().Format("2006-01-02")
 
 	if job.Status == "complete" && job.DigestID.Valid {
+		h.sessions.Put(r.Context(), "flash", "Digest generated successfully.")
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/digest/%s/%d", today, job.DigestID.Int64))
-		w.WriteHeader(200)
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, " ")
 		return
 	}
 
 	if job.Status == "failed" {
+		h.sessions.Put(r.Context(), "flash", "Generation failed: "+job.Step)
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/digest/%s", today))
-		// Store flash via a query param since we can't set session in htmx redirect
-		w.WriteHeader(200)
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, " ")
 		return
 	}
 
