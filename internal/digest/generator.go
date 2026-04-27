@@ -357,9 +357,9 @@ func (g *Generator) storeDigest(userID int64, isAuto int, resp *DigestResponse, 
 }
 
 func (g *Generator) loadRecentArticles(userID int64) ([]models.Article, error) {
-	since := time.Now().Add(-48 * time.Hour)
+	since := time.Now().Add(-24 * time.Hour)
 	rows, err := g.db.Query(
-		"SELECT id, user_id, source_id, guid, title, url, content, author, image_url, language, published_at FROM articles WHERE user_id = ? AND fetched_at > ? ORDER BY published_at DESC",
+		"SELECT id, user_id, source_id, guid, title, url, content, author, image_url, language, published_at FROM articles WHERE user_id = ? AND COALESCE(published_at, fetched_at) > ? ORDER BY COALESCE(published_at, fetched_at) DESC",
 		userID, since,
 	)
 	if err != nil {
