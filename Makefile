@@ -14,6 +14,7 @@ dev:
 	@make -j2 css-watch run
 
 run:
+	$(MAKE) css
 	go run ./cmd/news
 
 build:
