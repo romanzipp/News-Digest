@@ -91,9 +91,6 @@ Respond with valid JSON in this exact structure:
       ]
     }
   ],
-  "trending": [
-    {"topic": "topic name", "count": 14, "delta": "+112%"}
-  ],
   "meta": {
     "articles_reviewed": 98,
     "articles_surfaced": 12,
@@ -102,7 +99,6 @@ Respond with valid JSON in this exact structure:
 }
 
 Select at most 20 articles for the main items. Order by priority descending.
-For trending, identify 5-8 topics that appear across multiple articles.
 `)
 
 	return b.String()
