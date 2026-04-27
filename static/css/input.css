@@ -200,6 +200,10 @@
     }
   }
 
+  .brief-cell {
+    @apply pb-4 border-b border-dotted border-rule-light;
+  }
+
   .article-desc {
     color: var(--color-ink-soft);
   }
@@ -231,7 +235,7 @@ body {
 }
 
 /* Remove bottom border from last row in 3-col brief grid */
-.brief-grid > :nth-last-child(-n+3) {
+.brief-grid > .brief-cell:nth-last-child(-n+3) {
   border-bottom: none;
   padding-bottom: 0;
 }
