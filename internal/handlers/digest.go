@@ -101,7 +101,8 @@ func (h *DigestHandler) GeneratingStatus(w http.ResponseWriter, r *http.Request)
 		h.sessions.Put(r.Context(), "flash", "Digest generated successfully.")
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/digest/%s/%d", today, job.DigestID.Int64))
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, " ")
+		w.WriteHeader(286) // 286 stops htmx polling
+		fmt.Fprint(w, "done")
 		return
 	}
 
@@ -109,7 +110,8 @@ func (h *DigestHandler) GeneratingStatus(w http.ResponseWriter, r *http.Request)
 		h.sessions.Put(r.Context(), "flash", "Generation failed: "+job.Step)
 		w.Header().Set("HX-Redirect", fmt.Sprintf("/digest/%s", today))
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, " ")
+		w.WriteHeader(286)
+		fmt.Fprint(w, "failed")
 		return
 	}
 
