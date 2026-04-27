@@ -147,6 +147,7 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 	}
 	data["TopItems"] = top
 	data["RestItems"] = rest
+	data["GroupedRest"] = groupByCategory(rest)
 
 	h.tmpl.Render(w, "home", data)
 }
@@ -316,6 +317,32 @@ func parseTrending(raw string) []trendingView {
 	}
 	json.Unmarshal([]byte(raw), &resp)
 	return resp.Trending
+}
+
+type categoryGroup struct {
+	Category string
+	Color    string
+	Items    []itemView
+}
+
+func groupByCategory(items []itemView) []categoryGroup {
+	order := []string{}
+	m := map[string][]itemView{}
+	for _, it := range items {
+		if _, ok := m[it.Category]; !ok {
+			order = append(order, it.Category)
+		}
+		m[it.Category] = append(m[it.Category], it)
+	}
+	groups := make([]categoryGroup, len(order))
+	for i, cat := range order {
+		groups[i] = categoryGroup{
+			Category: cat,
+			Color:    models.CategoryColors[cat],
+			Items:    m[cat],
+		}
+	}
+	return groups
 }
 
 func formatDateLong(s string) string {
