@@ -291,7 +291,7 @@
   }
 
   .copy-toast {
-    @apply flex gap-2 items-center mt-1;
+    @apply absolute right-0 bottom-full mb-2 flex gap-2 items-center p-2 border border-rule bg-cream shadow-md rounded-sm z-10;
   }
 
   .copy-toast-input {

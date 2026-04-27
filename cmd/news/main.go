@@ -117,9 +117,6 @@ func main() {
 
 	mux.Handle("GET /read/{id}", authMw.RequireAuth(http.HandlerFunc(readH.MarkAndRedirect)))
 	mux.Handle("GET /copy/{id}", authMw.RequireAuth(http.HandlerFunc(copyH.CopyMarkdown)))
-	mux.HandleFunc("GET /empty", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html")
-	})
 
 	// Cron scheduler
 	c := cron.New()

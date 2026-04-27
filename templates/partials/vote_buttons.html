@@ -10,10 +10,13 @@
             hx-vals='{"item_id": "{{.ItemID}}", "value": "-1"}'
             class="vote-btn {{if eq .UserVote -1}}vote-btn-active{{end}}">&#9660; less</button>
     </span>
-    <span hx-target="this" hx-swap="innerHTML">
+    <span class="relative">
         <button
             hx-get="/copy/{{.ItemID}}"
-            class="vote-btn" title="Copy markdown">&#128203;</button>
+            hx-target="next .copy-target"
+            hx-swap="innerHTML"
+            class="vote-btn" title="Copy markdown"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <span class="copy-target"></span>
     </span>
 </span>
 {{end}}

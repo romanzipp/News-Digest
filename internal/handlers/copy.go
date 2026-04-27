@@ -43,10 +43,10 @@ func (h *CopyHandler) CopyMarkdown(w http.ResponseWriter, r *http.Request) {
 	markdown := fmt.Sprintf("**%s**: %s ([%s](%s))", date, headline, sourceName, sourceURL)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprintf(w, `<div class="copy-toast" id="copy-toast">
+	fmt.Fprintf(w, `<span class="copy-toast">
 		<input type="text" readonly value="%s" class="copy-toast-input" onfocus="this.select()" autofocus>
-		<button class="vote-btn" hx-get="/empty" hx-target="#copy-toast" hx-swap="outerHTML">&#10005;</button>
-	</div>`, escapeAttr(markdown))
+		<button type="button" class="vote-btn" onclick="this.parentElement.remove()">&#10005;</button>
+	</span>`, escapeAttr(markdown))
 }
 
 func escapeAttr(s string) string {
