@@ -30,8 +30,9 @@ type loggingProvider struct {
 }
 
 func (l *loggingProvider) Complete(ctx context.Context, systemPrompt, userPrompt string) (string, error) {
-	log.Printf("ai request: provider=%s model=%s system=%s user=%s",
-		l.provider, l.model, truncateStr(systemPrompt, 200), truncateStr(userPrompt, 300))
+	log.Printf("ai request: provider=%s model=%s system_len=%d user_len=%d", l.provider, l.model, len(systemPrompt), len(userPrompt))
+	log.Printf("ai request system:\n%s", systemPrompt)
+	log.Printf("ai request user:\n%s", userPrompt)
 
 	start := time.Now()
 	resp, err := l.inner.Complete(ctx, systemPrompt, userPrompt)
@@ -42,8 +43,8 @@ func (l *loggingProvider) Complete(ctx context.Context, systemPrompt, userPrompt
 		return "", err
 	}
 
-	log.Printf("ai response: provider=%s elapsed=%s len=%d body=%s",
-		l.provider, elapsed, len(resp), truncateStr(resp, 500))
+	log.Printf("ai response: provider=%s elapsed=%s len=%d", l.provider, elapsed, len(resp))
+	log.Printf("ai response body:\n%s", resp)
 
 	return resp, nil
 }
