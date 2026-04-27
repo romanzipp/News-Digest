@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"git.romanzipp.net/romanzipp/news/internal/templates"
@@ -50,20 +51,6 @@ func (h *CopyHandler) CopyMarkdown(w http.ResponseWriter, r *http.Request) {
 }
 
 func escapeAttr(s string) string {
-	var b []byte
-	for _, c := range s {
-		switch c {
-		case '"':
-			b = append(b, '&', 'q', 'u', 'o', 't', ';')
-		case '&':
-			b = append(b, '&', 'a', 'm', 'p', ';')
-		case '<':
-			b = append(b, '&', 'l', 't', ';')
-		case '>':
-			b = append(b, '&', 'g', 't', ';')
-		default:
-			b = append(b, byte(c))
-		}
-	}
-	return string(b)
+	r := strings.NewReplacer(`"`, "&quot;", "&", "&amp;", "<", "&lt;", ">", "&gt;")
+	return r.Replace(s)
 }
