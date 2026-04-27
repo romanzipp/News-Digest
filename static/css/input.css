@@ -206,14 +206,8 @@
   }
 
   .brief-cell {
-    @apply pb-4 mb-4 border-b border-dotted border-rule-light;
+    @apply mb-4;
     break-inside: avoid;
-  }
-
-  .brief-cell:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
   }
 
   .article-desc {
