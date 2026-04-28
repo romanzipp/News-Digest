@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"time"
@@ -124,11 +125,13 @@ func main() {
 	c := cron.New()
 	c.AddFunc(cfg.FetchCron, func() {
 		log.Println("cron: fetching feeds")
-		registry.FetchAllUsers(nil)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+		defer cancel()
+		registry.FetchAllUsers(ctx)
 	})
 	c.AddFunc(cfg.DigestCron, func() {
 		log.Println("cron: generating digests")
-		gen.GenerateAllUsers(nil)
+		gen.GenerateAllUsers(context.Background())
 	})
 	c.Start()
 	defer c.Stop()
