@@ -118,6 +118,9 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 
 	activeJob, _ := h.generator.ActiveJobForUser(user.ID)
 
+	latestDate := h.latestDigestDate(user.ID)
+	isOlderDigest := latestDate != "" && latestDate > date
+
 	data := map[string]any{
 		"Title":             "",
 		"User":              user,
@@ -134,6 +137,8 @@ func (h *HomeHandler) renderDigest(w http.ResponseWriter, r *http.Request, user 
 		"FeedNames":         feedNames,
 		"PreferenceSummary": prefSummary,
 		"ActiveJob":         activeJob,
+		"IsOlderDigest":     isOlderDigest,
+		"LatestDate":        latestDate,
 		"DigestMeta": map[string]any{
 			"FeedsCount":       dg.FeedsCount,
 			"ArticlesReviewed": dg.ArticlesReviewed,
@@ -428,6 +433,12 @@ func (h *HomeHandler) loadSections(digestID, userID int64) []digestSectionView {
 		sections = append(sections, *sectionMap[t])
 	}
 	return sections
+}
+
+func (h *HomeHandler) latestDigestDate(userID int64) string {
+	var d string
+	h.db.QueryRow("SELECT date FROM digests WHERE user_id = ? ORDER BY date DESC LIMIT 1", userID).Scan(&d)
+	return d
 }
 
 func formatSectionTime(s string) string {

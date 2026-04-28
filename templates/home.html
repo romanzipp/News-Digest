@@ -5,6 +5,10 @@
 <a href="/digest/generating/{{.ActiveJob.ID}}" class="block py-3 text-sm border-b border-rule bg-ink text-cream no-underline">
     <div class="content-container">Digest is being generated — {{.ActiveJob.Step}}</div>
 </a>
+{{else if .IsOlderDigest}}
+<a href="/digest/{{.LatestDate}}" class="block py-3 text-sm border-b border-rule bg-ink text-cream no-underline">
+    <div class="content-container">A newer digest is available — {{formatDate .LatestDate}} &rarr;</div>
+</a>
 {{end}}
 
 {{if not .Empty}}
