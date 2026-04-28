@@ -35,8 +35,19 @@ func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	today := time.Now().Format("2006-01-02")
-	http.Redirect(w, r, "/digest/"+today, http.StatusSeeOther)
+	date := h.latestDigestDate(user.ID)
+	if date == "" {
+		date = time.Now().Format("2006-01-02")
+	}
+
+	digest, items, err := h.loadDigest(user.ID, date, 0)
+	if err != nil {
+		h.renderEmpty(w, r, user, date)
+		return
+	}
+
+	allDigests := h.listDigestsForDate(user.ID, date)
+	h.renderDigest(w, r, user, date, digest, items, allDigests)
 }
 
 func (h *HomeHandler) DigestByDate(w http.ResponseWriter, r *http.Request) {
