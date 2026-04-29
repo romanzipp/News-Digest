@@ -57,12 +57,12 @@ func buildSystemPrompt(interests []models.Interest, votes []voteRecord, sections
 	}
 
 	b.WriteString(`## Output
-Respond as JSON with keys: "items" (array of articles), "sections" (array of section results), "meta" (object with articles_reviewed, articles_surfaced, estimated_read_minutes).
-Each item: article_guid, headline, tldr, bullets[], category, priority (1-10), importance (high/medium/low), read_time, language, source_name, source_url, image_url.
+Respond as JSON with keys: "articles" (array of articles), "sections" (array of section results), "meta" (object with articles_reviewed, articles_surfaced, estimated_read_minutes).
+Each article: article_guid, headline, tldr, bullets[], category, priority (1-10), importance (high/medium/low), read_time, language, source_name, source_url, image_url.
 Each section: section_id, items[] with article_guid, headline, severity (high/med/low), indicator, published_at, source_name, source_url, language.
 
 ## Instructions
-Select at most 20 articles for the main items. Order by priority descending.
+Select at most 20 articles for the "articles" array. Order by priority descending.
 Only include categories that naturally fit the available articles. Do NOT force articles into categories just to have coverage — quality over breadth. If a category has relevant articles, aim for at least 3.
 Never fabricate or embellish information. If an article's content is short or sparse, keep the summary and bullets short too — only reflect what is actually in the source material.
 

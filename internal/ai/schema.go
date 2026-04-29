@@ -6,7 +6,7 @@ import (
 )
 
 type DigestSchema struct {
-	Items    []DigestItemSchema `json:"items" jsonschema_description:"Selected articles for the digest, ordered by priority descending"`
+	Articles []DigestItemSchema `json:"articles" jsonschema_description:"Selected articles for the digest, ordered by priority descending"`
 	Sections []SectionSchema    `json:"sections" jsonschema_description:"Custom section results"`
 	Meta     MetaSchema         `json:"meta" jsonschema_description:"Metadata about the digest generation"`
 }

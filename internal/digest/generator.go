@@ -296,7 +296,7 @@ func (g *Generator) storeDigest(userID int64, isAuto int, resp *DigestResponse, 
 	}
 	digestID, _ := result.LastInsertId()
 
-	for i, item := range resp.Items {
+	for i, item := range resp.Articles {
 		articleID := g.findArticleID(userID, item.ArticleGUID)
 		bullets, _ := json.Marshal(item.Bullets)
 

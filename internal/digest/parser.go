@@ -7,7 +7,7 @@ import (
 )
 
 type DigestResponse struct {
-	Items    []DigestItemResponse `json:"items"`
+	Articles []DigestItemResponse `json:"articles"`
 	Sections []SectionResponse    `json:"sections"`
 	Meta     MetaResponse         `json:"meta"`
 }
@@ -52,6 +52,14 @@ type MetaResponse struct {
 func parseResponse(raw string) (*DigestResponse, error) {
 	var resp DigestResponse
 	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		// The model sometimes returns array fields as stringified JSON.
+		// Try to unwrap and re-parse.
+		if fixed, ok := tryUnwrapStringFields(raw); ok {
+			if err2 := json.Unmarshal([]byte(fixed), &resp); err2 == nil {
+				log.Printf("ai json: recovered from stringified fields")
+				return &resp, nil
+			}
+		}
 		tail := raw
 		if len(tail) > 200 {
 			tail = raw[len(raw)-200:]
@@ -60,6 +68,33 @@ func parseResponse(raw string) (*DigestResponse, error) {
 		return nil, fmt.Errorf("parse AI response: %w", err)
 	}
 	return &resp, nil
+}
+
+// tryUnwrapStringFields detects fields that are JSON strings containing
+// arrays/objects and unwraps them into their actual JSON types.
+func tryUnwrapStringFields(raw string) (string, bool) {
+	var obj map[string]json.RawMessage
+	if json.Unmarshal([]byte(raw), &obj) != nil {
+		return "", false
+	}
+	changed := false
+	for key, val := range obj {
+		var s string
+		if json.Unmarshal(val, &s) == nil && len(s) > 0 && (s[0] == '[' || s[0] == '{') {
+			if json.Valid([]byte(s)) {
+				obj[key] = json.RawMessage(s)
+				changed = true
+			}
+		}
+	}
+	if !changed {
+		return "", false
+	}
+	out, err := json.Marshal(obj)
+	if err != nil {
+		return "", false
+	}
+	return string(out), true
 }
 
 func mergeResponses(responses []*DigestResponse) *DigestResponse {
@@ -71,9 +106,9 @@ func mergeResponses(responses []*DigestResponse) *DigestResponse {
 	seenGUIDs := make(map[string]bool)
 
 	for _, r := range responses {
-		for _, item := range r.Items {
+		for _, item := range r.Articles {
 			if !seenGUIDs[item.ArticleGUID] {
-				merged.Items = append(merged.Items, item)
+				merged.Articles = append(merged.Articles, item)
 				seenGUIDs[item.ArticleGUID] = true
 			}
 		}
@@ -84,21 +119,21 @@ func mergeResponses(responses []*DigestResponse) *DigestResponse {
 		merged.Meta.ArticlesSurfaced += r.Meta.ArticlesSurfaced
 	}
 
-	for i := 0; i < len(merged.Items); i++ {
-		for j := i + 1; j < len(merged.Items); j++ {
-			if merged.Items[j].Priority > merged.Items[i].Priority {
-				merged.Items[i], merged.Items[j] = merged.Items[j], merged.Items[i]
+	for i := 0; i < len(merged.Articles); i++ {
+		for j := i + 1; j < len(merged.Articles); j++ {
+			if merged.Articles[j].Priority > merged.Articles[i].Priority {
+				merged.Articles[i], merged.Articles[j] = merged.Articles[j], merged.Articles[i]
 			}
 		}
 	}
 
-	if len(merged.Items) > 20 {
-		merged.Items = merged.Items[:20]
+	if len(merged.Articles) > 20 {
+		merged.Articles = merged.Articles[:20]
 	}
 
-	merged.Meta.ArticlesSurfaced = len(merged.Items)
+	merged.Meta.ArticlesSurfaced = len(merged.Articles)
 	totalRead := 0
-	for _, item := range merged.Items {
+	for _, item := range merged.Articles {
 		totalRead += item.ReadTime
 	}
 	merged.Meta.EstimatedReadMinutes = totalRead
