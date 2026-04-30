@@ -12,6 +12,56 @@ type DigestResponse struct {
 	Meta     MetaResponse         `json:"meta"`
 }
 
+// UnmarshalJSON handles the case where the AI model returns array/object fields
+// as stringified JSON (e.g. "articles": "[{...}]" instead of "articles": [{...}]).
+func (r *DigestResponse) UnmarshalJSON(data []byte) error {
+	// Try standard decode first.
+	type plain DigestResponse
+	if err := json.Unmarshal(data, (*plain)(r)); err == nil {
+		return nil
+	}
+
+	// Fallback: decode into raw fields and unwrap any stringified values.
+	var raw struct {
+		Articles json.RawMessage `json:"articles"`
+		Sections json.RawMessage `json:"sections"`
+		Meta     json.RawMessage `json:"meta"`
+	}
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	if err := unmarshalStringOrJSON(raw.Articles, &r.Articles); err != nil {
+		return fmt.Errorf("articles: %w", err)
+	}
+	if err := unmarshalStringOrJSON(raw.Sections, &r.Sections); err != nil {
+		return fmt.Errorf("sections: %w", err)
+	}
+	if err := unmarshalStringOrJSON(raw.Meta, &r.Meta); err != nil {
+		return fmt.Errorf("meta: %w", err)
+	}
+	return nil
+}
+
+// unmarshalStringOrJSON tries to unmarshal raw JSON into dst. If the raw value
+// is a JSON string containing valid JSON, it unwraps the string first.
+func unmarshalStringOrJSON(raw json.RawMessage, dst any) error {
+	if len(raw) == 0 || string(raw) == "null" {
+		return nil
+	}
+	// Try direct decode.
+	if err := json.Unmarshal(raw, dst); err == nil {
+		return nil
+	}
+	// If it's a string, unwrap and retry.
+	var s string
+	if err := json.Unmarshal(raw, &s); err == nil {
+		return json.Unmarshal([]byte(s), dst)
+	}
+	// Return the original error.
+	return json.Unmarshal(raw, dst)
+}
+
 type DigestItemResponse struct {
 	ArticleGUID string   `json:"article_guid"`
 	Headline    string   `json:"headline"`
@@ -52,14 +102,6 @@ type MetaResponse struct {
 func parseResponse(raw string) (*DigestResponse, error) {
 	var resp DigestResponse
 	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
-		// The model sometimes returns array fields as stringified JSON.
-		// Try to unwrap and re-parse.
-		if fixed, ok := tryUnwrapStringFields(raw); ok {
-			if err2 := json.Unmarshal([]byte(fixed), &resp); err2 == nil {
-				log.Printf("ai json: recovered from stringified fields")
-				return &resp, nil
-			}
-		}
 		tail := raw
 		if len(tail) > 200 {
 			tail = raw[len(raw)-200:]
@@ -68,33 +110,6 @@ func parseResponse(raw string) (*DigestResponse, error) {
 		return nil, fmt.Errorf("parse AI response: %w", err)
 	}
 	return &resp, nil
-}
-
-// tryUnwrapStringFields detects fields that are JSON strings containing
-// arrays/objects and unwraps them into their actual JSON types.
-func tryUnwrapStringFields(raw string) (string, bool) {
-	var obj map[string]json.RawMessage
-	if json.Unmarshal([]byte(raw), &obj) != nil {
-		return "", false
-	}
-	changed := false
-	for key, val := range obj {
-		var s string
-		if json.Unmarshal(val, &s) == nil && len(s) > 0 && (s[0] == '[' || s[0] == '{') {
-			if json.Valid([]byte(s)) {
-				obj[key] = json.RawMessage(s)
-				changed = true
-			}
-		}
-	}
-	if !changed {
-		return "", false
-	}
-	out, err := json.Marshal(obj)
-	if err != nil {
-		return "", false
-	}
-	return string(out), true
 }
 
 func mergeResponses(responses []*DigestResponse) *DigestResponse {
